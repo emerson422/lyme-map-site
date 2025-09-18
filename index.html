@@ -1,9 +1,7 @@
 
-<!doctype html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lyme Academy – Interactive Studio Map</title>
 <style>
 .map-widget { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
@@ -38,27 +36,42 @@
 <div class="map-widget" id="lyme-map">
   <div class="map-wrap">
     <img src="Campus Map 2024.png" alt="Lyme Academy Campus Map">
-    <div class="hotspot" style="left: 67%; top: 26%; width: 8%; height: 8%;" data-room="Cole Studio"><span class="label">Cole Studio</span></div>
-    <div class="hotspot" style="left: 73%; top: 63%; width: 9%; height: 10%;" data-room="Weir Studio"><span class="label">Wet Studio</span></div>
-    <div class="hotspot" style="left: 60%; top: 62%; width: 8%; height: 10%;" data-room="Griswold Studio"><span class="label">Griswold Studio</span></div>
-    <div class="hotspot" style="left: 83%; top: 79%; width: 13%; height: 9%;" data-room="Cast Hall"><span class="label">Cast Hall</span></div>
-    <div class="hotspot" style="left: 86%; top: 67%; width: 12%; height: 10%;" data-room="Library"><span class="label">Library</span></div>
-    <div class="hotspot" style="left: 75%; top: 41%; width: 14%; height: 15%;" data-room="Student Studios"><span class="label">Student Studios</span></div>
-    <div class="hotspot" style="left: 75%; top: 41%; width: 14%; height: 15%;" data-room="Stobart Studio"><span class="label">Stobart Studio</span></div>
+
+    <!-- Hotspots (ensure data-room matches schedule keys exactly) -->
+    <div class="hotspot" style="left: 49%;top: 13%;width: 9%;height: 7%;" data-room="Cole Studio"></div>
+    <div class="hotspot" style="left: 62%;top: 65%;width: 9%;height: 5%;" data-room="Weir Studio"></div>
+    <div class="hotspot" style="left: 51%;top: 65.5%;width: 8%;height: 5%;" data-room="Griswold Studio"></div>
+    <div class="hotspot" style="left: 76%;top: 72%;width: 5%;height: 4%;" data-room="Cast Hall"></div>
+    <div class="hotspot" style="left: 82%;top: 68%;width: 7%;height: 5%;" data-room="Library"></div>
+    <div class="hotspot" style="left: 65%;top: 30%;width: 20%;height: 12%;" data-room="Student Studios"></div>
+    <div class="hotspot" style="left: 66%;top: 86%;width: 10%;height: 6%;" data-room="Chandler Studio"></div>
+    <div class="hotspot" style="left: 82%;top: 80%;width: 7%;height: 4.5%;" data-room="Southwick-Keller Studio"></div>
+    <div class="hotspot" style="left: 60%;top: 43%;width: 10%;height: 5.5%;" data-room="Cafe Studio"></div>
+    <div class="hotspot" style="left: 49%;top: 32%;width: 5%;height: 8%;" data-room="Dumond Studio"></div>
+    <div class="hotspot" style="left: 60%;top: 56%;width: 10%;height: 4.5%;" data-room="Stobart Studio"></div>
+    <div class="hotspot" style="left: 60%;top: 88%;width: 4%;height: 4.5%;" data-room="Casting Studio"></div>
   </div>
 
   <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal" role="document" aria-labelledby="modalTitle">
       <header>
-        <h3 id="modalTitle">Studio</h3>
-        <span class="badge" id="openBadge">Loading…</span>
+        <h3 id="modalTitle">Cast Hall</h3>
+        <span class="badge" id="openBadge" style="background: rgb(236, 253, 245); color: rgb(6, 95, 70);">OPEN</span>
       </header>
       <div class="content">
-        <div class="today" id="todaySummary">Today’s availability will appear here.</div>
+        <div class="today" id="todaySummary">
+          <strong>Thu:</strong> Open time right now. Free blocks: 08:00–22:00<br>
+          <span class="small">No bookings today. Open hours 08:00–22:00.</span>
+        </div>
         <div class="legend"><span class="swatch busy"></span>Booked <span class="swatch free"></span>Available</div>
         <table class="table" id="scheduleTable" aria-describedby="modalTitle">
           <thead><tr><th>Day</th><th>Time</th><th>Class / Use</th></tr></thead>
-          <tbody></tbody>
+          <tbody>
+            <tr><td>Tue</td><td><span class="swatch busy"></span>10:00–12:00</td><td>Anatomy Seminar</td></tr>
+            <tr><td>Tue</td><td><span class="swatch free"></span>08:00–10:00, 12:00–22:00</td><td>Available</td></tr>
+            <tr><td>Fri</td><td><span class="swatch busy"></span>14:00–16:00</td><td>Lecture / Crit</td></tr>
+            <tr><td>Fri</td><td><span class="swatch free"></span>08:00–14:00, 16:00–22:00</td><td>Available</td></tr>
+          </tbody>
         </table>
       </div>
       <footer>
@@ -73,36 +86,133 @@
 </div>
 
 <script>
+/* =======================
+   DATA: Weekly schedules
+   ======================= */
 const schedules = {
   "Cole Studio": [
-    { day: "Mon", start: "09:00", end: "12:00", title: "Figure Drawing I" },
-    { day: "Wed", start: "13:00", end: "17:00", title: "Open Studio" },
-    { day: "Fri", start: "10:00", end: "12:30", title: "Cast Drawing" },
+    { day: "Mon", start: "13:00", end: "16:00", title: "C.E. Still Life" },
+    { day: "Tue", start: "09:00", end: "12:00", title: "Figure Drawing" },
+    { day: "Tue", start: "13:00", end: "16:00", title: "Figure Drawing" },
+    { day: "Tue", start: "17:00", end: "20:00", title: "Figure Drawing" }, // fixed 017:00
+    { day: "Wed", start: "09:00", end: "12:00", title: "Figure Drawing" },
+    { day: "Wed", start: "17:00", end: "20:00", title: "C.E. Figure Drawing" },
+    { day: "Thu", start: "09:00", end: "12:00", title: "Figure Drawing" },
+    { day: "Thu", start: "15:00", end: "17:00", title: "Young Masters" },
+    { day: "Fri", start: "09:00", end: "12:00", title: "C.E. Figure Drawing" },
+    { day: "Sat", start: "09:00", end: "12:00", title: "Public Open Model" },
+    { day: "Sun", start: "13:30", end: "16:30", title: "Core/C.E. Open Model" },
   ],
   "Weir Studio": [
-    { day: "Tue", start: "09:30", end: "12:30", title: "Painting Foundations" },
-    { day: "Thu", start: "14:00", end: "18:00", title: "Advanced Painting" },
+    { day: "Mon", start: "09:00", end: "12:00", title: "Figure Painting" },
+    { day: "Mon", start: "13:00", end: "16:00", title: "Figure Painting" },
+    { day: "Tue", start: "09:00", end: "12:00", title: "Figure Painting" },
+    { day: "Tue", start: "13:00", end: "16:00", title: "Figure Painting" },
+    { day: "Wed", start: "09:00", end: "12:00", title: "Figure Painting" },
+    { day: "Wed", start: "13:00", end: "16:00", title: "Figure Painting" },
+    { day: "Thu", start: "09:00", end: "12:00", title: "Figure Painting" },
+    { day: "Thu", start: "13:00", end: "16:00", title: "Figure Painting" },
   ],
   "Griswold Studio": [
-    { day: "Mon", start: "13:00", end: "17:00", title: "Sculpture I" },
-    { day: "Thu", start: "09:00", end: "12:00", title: "Open Studio" },
+    { day: "Wed", start: "09:00", end: "12:00", title: "Printmaking Open Studios" },
+    { day: "Sat", start: "10:30", end: "14:30", title: "Printmaking Open Studios" },
   ],
-  "Cast Hall": [
-    { day: "Tue", start: "10:00", end: "12:00", title: "Anatomy Seminar" },
-    { day: "Fri", start: "14:00", end: "16:00", title: "Lecture / Crit" },
+  "Dumond Studio": [
+    { day: "Mon", start: "09:00", end: "12:00", title: "C.E. Cast Drawing/Painting" },
+    { day: "Tue", start: "09:00", end: "12:00", title: "C.E. Cast Drawing/Painting" },
+    { day: "Tue", start: "15:00", end: "17:00", title: "Young Masters" },
+    { day: "Wed", start: "09:00", end: "12:00", title: "C.E. Cast Drawing/Painting" },
+    { day: "Thu", start: "09:00", end: "12:00", title: "C.E. Cast Drawing/Painting" },
   ],
+  "Cafe Studio": [
+    { day: "Mon", start: "09:00", end: "12:00", title: "Figure Drawing" },
+    { day: "Mon", start: "13:00", end: "16:00", title: "Paint the Interior" },
+    { day: "Mon", start: "17:00", end: "20:00", title: "Figure Painting" },
+    { day: "Tue", start: "09:00", end: "12:00", title: "Figure Drawing" },
+    { day: "Tue", start: "13:00", end: "16:00", title: "Portrait Painting" },
+    { day: "Tue", start: "17:00", end: "20:00", title: "Figure Painting" },
+    { day: "Wed", start: "09:00", end: "12:00", title: "Figure Drawing" },
+    { day: "Wed", start: "13:00", end: "16:00", title: "Portrait Painting" },
+    { day: "Wed", start: "17:00", end: "20:00", title: "Figure Painting" },
+    { day: "Thu", start: "09:00", end: "12:00", title: "Figure Drawing" },
+    { day: "Thu", start: "13:00", end: "16:00", title: "Portrait Painting" },
+    { day: "Fri", start: "09:00", end: "12:00", title: "Figure Drawing" },
+    { day: "Fri", start: "13:00", end: "16:00", title: "Portrait Painting" },
+    { day: "Sat", start: "09:00", end: "12:00", title: "C.E. Portrait Drawing" },
+  ],
+  "Chandler Studio": [
+    { day: "Mon", start: "09:00", end: "12:00", title: "Figure Modeling" },
+    { day: "Mon", start: "17:00", end: "20:00", title: "Terra Cotta" },
+    { day: "Tue", start: "09:00", end: "12:00", title: "Figure Modeling" },
+    { day: "Tue", start: "13:00", end: "16:00", title: "Composition III" },
+    { day: "Wed", start: "06:00", end: "08:00", title: "Sculpture Club" },
+    { day: "Wed", start: "09:00", end: "12:00", title: "Figure Modeling" },
+    { day: "Wed", start: "13:00", end: "16:00", title: "Independent Study" },
+    { day: "Wed", start: "17:00", end: "20:00", title: "Ecorche" },
+    { day: "Thu", start: "09:00", end: "12:00", title: "Figure Modeling" },
+    { day: "Thu", start: "13:00", end: "16:00", title: "Clay Cast Studies" },
+    { day: "Thu", start: "17:00", end: "20:00", title: "D&amp;P Sculpture" },
+    { day: "Fri", start: "09:00", end: "12:00", title: "Figure Modeling" },
+    { day: "Fri", start: "13:00", end: "16:00", title: "Clay Cast Studies" },
+    { day: "Sat", start: "09:00", end: "12:00", title: "C.E. Sculpture" },
+    { day: "Sat", start: "13:00", end: "16:00", title: "Core Sculpture Open Model" },
+  ],
+  "Southwick-Keller Studio": [
+    { day: "Mon", start: "09:00", end: "12:00", title: "Figure Modeling" },
+    { day: "Mon", start: "13:00", end: "16:00", title: "Modeling Techniques" },
+    { day: "Tue", start: "09:00", end: "12:00", title: "Figure Modeling" },
+    { day: "Tue", start: "13:00", end: "16:00", title: "Figure Modeling" },
+    { day: "Tue", start: "17:00", end: "20:00", title: "C.E. Sculpture" },
+    { day: "Wed", start: "09:00", end: "12:00", title: "Figure Modeling" },
+    { day: "Wed", start: "13:00", end: "16:00", title: "Figure Modeling" },
+    { day: "Thu", start: "09:00", end: "12:00", title: "Figure Modeling" },
+    { day: "Thu", start: "13:00", end: "16:00", title: "Figure Modeling" },
+    { day: "Fri", start: "09:00", end: "12:00", title: "Figure Modeling" },
+    { day: "Fri", start: "13:00", end: "16:00", title: "Composition I" },
+    { day: "Fri", start: "17:00", end: "20:00", title: "Guest Lectures" },
+    { day: "Sat", start: "13:00", end: "16:00", title: "C.E. Sculpture" },
+  ],
+  "Cast Hall": [],
   "Library": [
-    { day: "Mon", start: "10:00", end: "12:00", title: "Quiet Study (reserved)" },
-    { day: "Wed", start: "15:00", end: "17:00", title: "Research Workshop" },
+    { day: "Tue", start: "17:00", end: "19:00", title: "Histories of Art I" },
+    { day: "Wed", start: "17:00", end: "19:00", title: "Professional Practice" },
+    { day: "Thu", start: "17:00", end: "19:00", title: "Histories of Art IV" },
   ],
   "Student Studios": [
-    { day: "Mon", start: "18:00", end: "21:00", title: "Peer Crit Night" },
+    { day: "Mon", start: "09:00", end: "12:00", title: "Cast Painting" },
+    { day: "Mon", start: "13:00", end: "16:00", title: "Cast Drawing" },
+    { day: "Mon", start: "17:00", end: "20:00", title: "Still Life/Color Theory, Sculpture Cast Drawing" },
+    { day: "Tue", start: "09:00", end: "12:00", title: "Cast Painting" },
+    { day: "Tue", start: "13:00", end: "16:00", title: "Cast Drawing" },
+    { day: "Wed", start: "09:00", end: "12:00", title: "Cast Painting" },
+    { day: "Wed", start: "13:00", end: "16:00", title: "Cast Drawing" },
+    { day: "Wed", start: "17:00", end: "20:00", title: "Sculpture Cast Drawing" },
+    { day: "Thu", start: "17:00", end: "20:00", title: "Sculpture Cast Drawing" },
   ],
-    "Stobart Studio": [
-    { day: "Mon", start: "18:00", end: "21:00", title: "Peer Crit Night" },
+  "Stobart Studio": [
+    { day: "Mon", start: "09:00", end: "12:00", title: "Sculpture Anatomy I" },
+    { day: "Mon", start: "13:00", end: "16:00", title: "Figure Drawing" },
+    { day: "Mon", start: "17:00", end: "20:00", title: "D&amp;P Anatomy I" },
+    { day: "Tue", start: "13:00", end: "16:00", title: "C.E. Figure Drawing" },
+    { day: "Wed", start: "13:00", end: "16:00", title: "Composition II" },
+    { day: "Wed", start: "17:00", end: "20:00", title: "Figure Drawing For Sculpture" },
+    { day: "Thu", start: "09:00", end: "12:00", title: "Portrait Painting" },
+    { day: "Thu", start: "13:00", end: "16:00", title: "Portrait Drawing" },
+    { day: "Fri", start: "09:00", end: "12:00", title: "Portrait Painting" },
+    { day: "Fri", start: "13:00", end: "16:00", title: "Portrait Drawing" },
+    { day: "Sat", start: "13:00", end: "16:00", title: "Open Model" },
+    { day: "Sat", start: "17:00", end: "20:00", title: "Open Model" },
+  ],
+  "Casting Studio": [
+    { day: "Mon", start: "13:00", end: "16:00", title: "Mold Making" },
+    { day: "Thu", start: "13:00", end: "16:00", title: "Intro to Foundry/Stone" },
+    { day: "Thu", start: "17:00", end: "20:00", title: "Intro to Foundry/Stone" },
   ]
 };
 
+/* =======================
+   Utils
+   ======================= */
 const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 function toMinutes(t){ const [H,M]=t.split(":").map(Number); return H*60+M; }
 function fromMinutes(m){ const h=String(Math.floor(m/60)).padStart(2,"0"); const mm=String(m%60).padStart(2,"0"); return `${h}:${mm}`; }
@@ -123,6 +233,9 @@ function computeAvailability(dayEvents, open="08:00", close="22:00"){
 }
 function humanRange([s,e]){ return `${fromMinutes(s)}–${fromMinutes(e)}`; }
 
+/* =======================
+   DOM wiring
+   ======================= */
 const backdrop = document.getElementById("modalBackdrop");
 const titleEl = document.getElementById("modalTitle");
 const openBadge = document.getElementById("openBadge");
@@ -133,10 +246,20 @@ const dlBtn = document.getElementById("downloadICS");
 
 document.querySelectorAll(".hotspot").forEach(hs => {
   hs.addEventListener("click", () => openRoom(hs.dataset.room));
+  // Auto label hotspots if not present
+  if (!hs.querySelector(".label")){
+    const lbl = document.createElement("div");
+    lbl.className = "label";
+    lbl.textContent = hs.dataset.room;
+    hs.appendChild(lbl);
+  }
 });
 closeBtn.addEventListener("click", () => backdrop.classList.remove("show"));
 backdrop.addEventListener("click", (e) => { if(e.target === backdrop) backdrop.classList.remove("show"); });
 
+/* =======================
+   Modal population
+   ======================= */
 function openRoom(room){
   const data = (schedules[room]||[]).slice().sort(sortEvents);
   titleEl.textContent = room;
@@ -161,6 +284,7 @@ function openRoom(room){
     }
   }
 
+  // Today status + clearer "next change"
   const now = new Date();
   const today = DAYS[(now.getDay()+6)%7];
   const dayEvents = data.filter(x=>x.day===today);
@@ -168,9 +292,27 @@ function openRoom(room){
   const nowMin = now.getHours()*60 + now.getMinutes();
   let status = "Open time right now";
   for(const [s,e] of busy){ if(nowMin>=s && nowMin<e){ status = "In use right now"; break; } }
-  const next = [...busy, [1440,1440]].find(([s,e])=> e > nowMin);
-  const nextText = dayEvents.length ? `Next change by ${humanRange(next)}` : "No bookings today";
-  todaySummary.innerHTML = `<strong>${today}:</strong> ${status}. Free blocks: ${free.length? free.map(humanRange).join(", "):"None"}<br><span class="small">${nextText}. Open hours 08:00–22:00.</span>`;
+
+  let nextChangeText = "No bookings today";
+  if (dayEvents.length){
+    const changes = [];
+    for (const [s,e] of busy){ changes.push({t:s, type:"start"}); changes.push({t:e, type:"end"}); }
+    changes.sort((a,b)=>a.t-b.t);
+    const upcoming = changes.find(c => c.t > nowMin);
+    if (upcoming){
+      const hh = String(Math.floor(upcoming.t/60)).padStart(2,"0");
+      const mm = String(upcoming.t%60).padStart(2,"0");
+      const tstr = `${hh}:${mm}`;
+      nextChangeText = (status === "In use right now") ? `Ends at ${tstr}` : `Booked at ${tstr}`;
+    } else {
+      nextChangeText = "No more changes today";
+    }
+  }
+
+  todaySummary.innerHTML =
+    `<strong>${today}:</strong> ${status}. ` +
+    `Free blocks: ${free.length? free.map(humanRange).join(", "):"None"}<br>` +
+    `<span class="small">${nextChangeText}. Open hours 08:00–22:00.</span>`;
 
   openBadge.textContent = status.includes("In use") ? "BUSY" : "OPEN";
   openBadge.style.background = status.includes("In use") ? "#fff7ed" : "#ecfdf5";
@@ -181,42 +323,72 @@ function openRoom(room){
   backdrop.classList.add("show");
 }
 
+/* =======================
+   ICS export (TZ-safe)
+   ======================= */
 function downloadICS(room, data){
+  const TZ = "America/New_York";
+
+  function formatLocal(dt){
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth()+1).padStart(2,"0");
+    const d = String(dt.getDate()).padStart(2,"0");
+    const H = String(dt.getHours()).padStart(2,"0");
+    const M = String(dt.getMinutes()).padStart(2,"0");
+    const S = "00";
+    return `${y}${m}${d}T${H}${M}${S}`;
+  }
+
   const now = new Date();
   const thisMonday = new Date(now);
   thisMonday.setDate(now.getDate() - ((now.getDay()+6)%7));
   thisMonday.setHours(0,0,0,0);
 
-  function dtStamp(d){ return d.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z'; }
-  function dateOn(day){ const idx = DAYS.indexOf(day); const dt = new Date(thisMonday); dt.setDate(thisMonday.getDate()+idx); return dt; }
+  function dateOn(day){
+    const idx = DAYS.indexOf(day);
+    const dt = new Date(thisMonday);
+    dt.setDate(thisMonday.getDate()+idx);
+    return dt;
+  }
 
-  let ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Lyme Academy//Interactive Map//EN\r\n";
+  function utcStamp(dt=new Date()){
+    return dt.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+  }
+
+  let ics = "";
+  ics += "BEGIN:VCALENDAR\r\n";
+  ics += "VERSION:2.0\r\n";
+  ics += "PRODID:-//Lyme Academy//Interactive Map//EN\r\n";
+  ics += `X-WR-TIMEZONE:${TZ}\r\n`;
+
   for(const e of data){
     const d = dateOn(e.day);
     const [sh,sm] = e.start.split(":").map(Number);
     const [eh,em] = e.end.split(":").map(Number);
+
     const dtstart = new Date(d); dtstart.setHours(sh, sm, 0, 0);
-    const dtend = new Date(d); dtend.setHours(eh, em, 0, 0);
+    const dtend   = new Date(d); dtend.setHours(eh, em, 0, 0);
+
     ics += "BEGIN:VEVENT\r\n";
     ics += `UID:${Math.random().toString(36).slice(2)}@lyme\r\n`;
-    ics += `DTSTAMP:${dtStamp(new Date())}\r\n`;
-    ics += `DTSTART:${dtStamp(dtstart)}\r\n`;
-    ics += `DTEND:${dtStamp(dtend)}\r\n`;
+    ics += `DTSTAMP:${utcStamp()}\r\n`;
+    ics += `DTSTART;TZID=${TZ}:${formatLocal(dtstart)}\r\n`;
+    ics += `DTEND;TZID=${TZ}:${formatLocal(dtend)}\r\n`;
     ics += `SUMMARY:${room} – ${e.title}\r\n`;
     ics += "END:VEVENT\r\n";
   }
+
   ics += "END:VCALENDAR\r\n";
 
   const blob = new Blob([ics], {type: "text/calendar"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${room.replace(/\\s+/g,'_')}_week.ics`;
+  a.download = `${room.replace(/\s+/g,'_')}_week.ics`; // fixed regex
   document.body.appendChild(a);
   a.click();
   a.remove();
   setTimeout(()=>URL.revokeObjectURL(url), 3000);
 }
 </script>
-</body>
-</html>
+</body></html>

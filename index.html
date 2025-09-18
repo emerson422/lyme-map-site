@@ -1,0 +1,218 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lyme Academy – Interactive Studio Map</title>
+<style>
+.map-widget { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+.map-widget * { box-sizing: border-box; }
+.map-wrap { position: relative; max-width: 900px; margin: 1rem auto; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,.12); }
+.map-wrap img { display: block; width: 100%; height: auto; }
+.hotspot { position: absolute; border: 2px solid rgba(255,255,255,.95); outline: 2px dashed rgba(0,0,0,.25); background: rgba(26,115,232,.08); border-radius: 8px; cursor: pointer; transition: transform .06s ease-in-out, box-shadow .1s; }
+.hotspot:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+.hotspot .label { position: absolute; left: 50%; top: -1.8rem; transform: translateX(-50%); background: #1a73e8; color: #fff; padding: 2px 8px; border-radius: 999px; font-size: 12px; white-space: nowrap; pointer-events: none; }
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 1rem; }
+.modal-backdrop.show { display: flex; }
+.modal { width: min(720px,95vw); background: #fff; border-radius: 16px; box-shadow: 0 14px 50px rgba(0,0,0,.35); overflow: hidden; max-height: 90vh; display: grid; grid-template-rows: auto 1fr auto; }
+.modal header { padding: 16px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 12px; }
+.modal header h3 { margin: 0; font-size: 18px; }
+.badge { font-size: 12px; background: #eef2ff; color: #3730a3; padding: 2px 8px; border-radius: 999px; }
+.modal .content { padding: 16px 20px; overflow: auto; }
+.modal .content .today { background: #f8fafc; border: 1px solid #e5e7eb; padding: 12px; border-radius: 12px; margin-bottom: 14px; }
+.table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.table th, .table td { padding: 8px 10px; border-bottom: 1px solid #eee; text-align: left; }
+.table th { background: #fafafa; }
+.legend { display: flex; gap: 12px; align-items: center; font-size: 12px; margin: 10px 0 2px; }
+.swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 6px; }
+.swatch.busy { background: #fca5a5; }
+.swatch.free { background: #86efac; }
+.modal footer { padding: 12px 20px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+.modal footer .btn { background: #1a73e8; color: #fff; padding: 10px 14px; border: 0; border-radius: 10px; cursor: pointer; }
+.modal footer .btn.secondary { background: #f1f5f9; color: #0f172a; }
+.small { color: #64748b; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="map-widget" id="lyme-map">
+  <div class="map-wrap">
+    <img src="Campus Map 2024.png" alt="Lyme Academy Campus Map">
+    <div class="hotspot" style="left: 67%; top: 26%; width: 8%; height: 8%;" data-room="Cole Studio"><span class="label">Cole Studio</span></div>
+    <div class="hotspot" style="left: 73%; top: 63%; width: 9%; height: 10%;" data-room="Wet Studio"><span class="label">Wet Studio</span></div>
+    <div class="hotspot" style="left: 60%; top: 62%; width: 8%; height: 10%;" data-room="Griswold Studio"><span class="label">Griswold Studio</span></div>
+    <div class="hotspot" style="left: 83%; top: 79%; width: 13%; height: 9%;" data-room="Cast Hall"><span class="label">Cast Hall</span></div>
+    <div class="hotspot" style="left: 86%; top: 67%; width: 12%; height: 10%;" data-room="Library"><span class="label">Library</span></div>
+    <div class="hotspot" style="left: 75%; top: 41%; width: 14%; height: 15%;" data-room="Student Studios"><span class="label">Student Studios</span></div>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document" aria-labelledby="modalTitle">
+      <header>
+        <h3 id="modalTitle">Studio</h3>
+        <span class="badge" id="openBadge">Loading…</span>
+      </header>
+      <div class="content">
+        <div class="today" id="todaySummary">Today’s availability will appear here.</div>
+        <div class="legend"><span class="swatch busy"></span>Booked <span class="swatch free"></span>Available</div>
+        <table class="table" id="scheduleTable" aria-describedby="modalTitle">
+          <thead><tr><th>Day</th><th>Time</th><th>Class / Use</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <footer>
+        <span class="small">Edit schedules below in <code>schedules</code>.</span>
+        <div>
+          <button class="btn secondary" id="downloadICS">Export week (.ics)</button>
+          <button class="btn" id="closeBtn">Close</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+const schedules = {
+  "Cole Studio": [
+    { day: "Mon", start: "09:00", end: "12:00", title: "Figure Drawing I" },
+    { day: "Wed", start: "13:00", end: "17:00", title: "Open Studio" },
+    { day: "Fri", start: "10:00", end: "12:30", title: "Cast Drawing" },
+  ],
+  "Wet Studio": [
+    { day: "Tue", start: "09:30", end: "12:30", title: "Painting Foundations" },
+    { day: "Thu", start: "14:00", end: "18:00", title: "Advanced Painting" },
+  ],
+  "Griswold Studio": [
+    { day: "Mon", start: "13:00", end: "17:00", title: "Sculpture I" },
+    { day: "Thu", start: "09:00", end: "12:00", title: "Open Studio" },
+  ],
+  "Cast Hall": [
+    { day: "Tue", start: "10:00", end: "12:00", title: "Anatomy Seminar" },
+    { day: "Fri", start: "14:00", end: "16:00", title: "Lecture / Crit" },
+  ],
+  "Library": [
+    { day: "Mon", start: "10:00", end: "12:00", title: "Quiet Study (reserved)" },
+    { day: "Wed", start: "15:00", end: "17:00", title: "Research Workshop" },
+  ],
+  "Student Studios": [
+    { day: "Mon", start: "18:00", end: "21:00", title: "Peer Crit Night" },
+  ]
+};
+
+const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+function toMinutes(t){ const [H,M]=t.split(":").map(Number); return H*60+M; }
+function fromMinutes(m){ const h=String(Math.floor(m/60)).padStart(2,"0"); const mm=String(m%60).padStart(2,"0"); return `${h}:${mm}`; }
+function sortEvents(a,b){ if(a.day!==b.day){ return DAYS.indexOf(a.day)-DAYS.indexOf(b.day); } return toMinutes(a.start)-toMinutes(b.start); }
+function computeAvailability(dayEvents, open="08:00", close="22:00"){
+  const start=toMinutes(open), end=toMinutes(close);
+  const merged = dayEvents.slice().sort((a,b)=>toMinutes(a.start)-toMinutes(b.start));
+  const busy = [];
+  for(const e of merged){
+    const s=Math.max(toMinutes(e.start),start), ee=Math.min(toMinutes(e.end),end);
+    if(ee<=s) continue;
+    if(!busy.length || s>busy[busy.length-1][1]) busy.push([s,ee]); else busy[busy.length-1][1]=Math.max(busy[busy.length-1][1],ee);
+  }
+  const free=[]; let cursor=start;
+  for(const [s,e] of busy){ if(s>cursor) free.push([cursor,s]); cursor=Math.max(cursor,e); }
+  if(cursor<end) free.push([cursor,end]);
+  return {busy, free};
+}
+function humanRange([s,e]){ return `${fromMinutes(s)}–${fromMinutes(e)}`; }
+
+const backdrop = document.getElementById("modalBackdrop");
+const titleEl = document.getElementById("modalTitle");
+const openBadge = document.getElementById("openBadge");
+const todaySummary = document.getElementById("todaySummary");
+const tableBody = document.querySelector("#scheduleTable tbody");
+const closeBtn = document.getElementById("closeBtn");
+const dlBtn = document.getElementById("downloadICS");
+
+document.querySelectorAll(".hotspot").forEach(hs => {
+  hs.addEventListener("click", () => openRoom(hs.dataset.room));
+});
+closeBtn.addEventListener("click", () => backdrop.classList.remove("show"));
+backdrop.addEventListener("click", (e) => { if(e.target === backdrop) backdrop.classList.remove("show"); });
+
+function openRoom(room){
+  const data = (schedules[room]||[]).slice().sort(sortEvents);
+  titleEl.textContent = room;
+
+  tableBody.innerHTML = "";
+  if (!data.length){
+    tableBody.innerHTML = `<tr><td colspan="3">No classes scheduled. Fully available during open hours.</td></tr>`;
+  } else {
+    for(const d of DAYS){
+      const dayEvents = data.filter(x=>x.day===d);
+      if(dayEvents.length === 0) continue;
+      for(const e of dayEvents){
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${d}</td><td><span class="swatch busy"></span>${e.start}–${e.end}</td><td>${e.title}</td>`;
+        tableBody.appendChild(tr);
+      }
+      const {free} = computeAvailability(dayEvents);
+      const freeStr = free.length ? free.map(humanRange).join(", ") : "None during open hours";
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${d}</td><td><span class="swatch free"></span>${freeStr}</td><td>Available</td>`;
+      tableBody.appendChild(tr);
+    }
+  }
+
+  const now = new Date();
+  const today = DAYS[(now.getDay()+6)%7];
+  const dayEvents = data.filter(x=>x.day===today);
+  const {busy, free} = computeAvailability(dayEvents);
+  const nowMin = now.getHours()*60 + now.getMinutes();
+  let status = "Open time right now";
+  for(const [s,e] of busy){ if(nowMin>=s && nowMin<e){ status = "In use right now"; break; } }
+  const next = [...busy, [1440,1440]].find(([s,e])=> e > nowMin);
+  const nextText = dayEvents.length ? `Next change by ${humanRange(next)}` : "No bookings today";
+  todaySummary.innerHTML = `<strong>${today}:</strong> ${status}. Free blocks: ${free.length? free.map(humanRange).join(", "):"None"}<br><span class="small">${nextText}. Open hours 08:00–22:00.</span>`;
+
+  openBadge.textContent = status.includes("In use") ? "BUSY" : "OPEN";
+  openBadge.style.background = status.includes("In use") ? "#fff7ed" : "#ecfdf5";
+  openBadge.style.color = status.includes("In use") ? "#9a3412" : "#065f46";
+
+  dlBtn.onclick = () => downloadICS(room, data);
+
+  backdrop.classList.add("show");
+}
+
+function downloadICS(room, data){
+  const now = new Date();
+  const thisMonday = new Date(now);
+  thisMonday.setDate(now.getDate() - ((now.getDay()+6)%7));
+  thisMonday.setHours(0,0,0,0);
+
+  function dtStamp(d){ return d.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z'; }
+  function dateOn(day){ const idx = DAYS.indexOf(day); const dt = new Date(thisMonday); dt.setDate(thisMonday.getDate()+idx); return dt; }
+
+  let ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Lyme Academy//Interactive Map//EN\r\n";
+  for(const e of data){
+    const d = dateOn(e.day);
+    const [sh,sm] = e.start.split(":").map(Number);
+    const [eh,em] = e.end.split(":").map(Number);
+    const dtstart = new Date(d); dtstart.setHours(sh, sm, 0, 0);
+    const dtend = new Date(d); dtend.setHours(eh, em, 0, 0);
+    ics += "BEGIN:VEVENT\r\n";
+    ics += `UID:${Math.random().toString(36).slice(2)}@lyme\r\n`;
+    ics += `DTSTAMP:${dtStamp(new Date())}\r\n`;
+    ics += `DTSTART:${dtStamp(dtstart)}\r\n`;
+    ics += `DTEND:${dtStamp(dtend)}\r\n`;
+    ics += `SUMMARY:${room} – ${e.title}\r\n`;
+    ics += "END:VEVENT\r\n";
+  }
+  ics += "END:VCALENDAR\r\n";
+
+  const blob = new Blob([ics], {type: "text/calendar"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${room.replace(/\\s+/g,'_')}_week.ics`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 3000);
+}
+</script>
+</body>
+</html>

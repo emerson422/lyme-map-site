@@ -96,7 +96,7 @@ const schedules = {
     { day: "Mon", start: "13:00", end: "16:00", title: "C.E. Still Life" },
     { day: "Tue", start: "09:00", end: "12:00", title: "Figure Drawing" },
     { day: "Tue", start: "13:00", end: "16:00", title: "Figure Drawing" },
-    { day: "Tue", start: "17:00", end: "20:00", title: "Figure Drawing" }, // fixed 017:00
+    { day: "Tue", start: "17:00", end: "20:00", title: "Figure Drawing" },
     { day: "Wed", start: "09:00", end: "12:00", title: "Figure Drawing" },
     { day: "Wed", start: "17:00", end: "20:00", title: "C.E. Figure Drawing" },
     { day: "Thu", start: "09:00", end: "12:00", title: "Figure Drawing" },
@@ -236,33 +236,11 @@ function computeAvailability(dayEvents, open="08:00", close="22:00"){
 function humanRange([s,e]){ return `${fromMinutes(s)}–${fromMinutes(e)}`; }
 
 /* =======================
-   DOM wiring
-   ======================= */
-const backdrop = document.getElementById("modalBackdrop");
-const titleEl = document.getElementById("modalTitle");
-const openBadge = document.getElementById("openBadge");
-const todaySummary = document.getElementById("todaySummary");
-const tableBody = document.querySelector("#scheduleTable tbody");
-const closeBtn = document.getElementById("closeBtn");
-const dlBtn = document.getElementById("downloadICS");
-
-document.querySelectorAll(".hotspot").forEach(hs => {
-  hs.addEventListener("click", () => openRoom(hs.dataset.room));
-  // Auto label hotspots if not present
-  if (!hs.querySelector(".label")){
-    const lbl = document.createElement("div");
-    lbl.className = "label";
-    lbl.textContent = hs.dataset.room;
-    hs.appendChild(lbl);
-  }
-});
-closeBtn.addEventListener("click", () => backdrop.classList.remove("show"));
-backdrop.addEventListener("click", (e) => { if(e.target === backdrop) backdrop.classList.remove("show"); });
-
-/* =======================
    Modal population
    ======================= */
 function openRoom(room){
+  const { backdrop, titleEl, openBadge, todaySummary, tableBody, dlBtn } = window.__mapEls;
+
   const data = (schedules[room]||[]).slice().sort(sortEvents);
   titleEl.textContent = room;
 
@@ -325,7 +303,6 @@ function openRoom(room){
   backdrop.classList.add("show");
 }
 
-
 /* =======================
    ICS export (TZ-safe)
    ======================= */
@@ -387,11 +364,51 @@ function downloadICS(room, data){
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${room.replace(/\s+/g,'_')}_week.ics`; // fixed regex
+  a.download = `${room.replace(/\s+/g,'_')}_week.ics`;
   document.body.appendChild(a);
   a.click();
   a.remove();
   setTimeout(()=>URL.revokeObjectURL(url), 3000);
 }
+
+/* =======================
+   DOM wiring (after DOM ready)
+   ======================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const backdrop = document.getElementById("modalBackdrop");
+  const titleEl = document.getElementById("modalTitle");
+  const openBadge = document.getElementById("openBadge");
+  const todaySummary = document.getElementById("todaySummary");
+  const tableBody = document.querySelector("#scheduleTable tbody");
+  const closeBtn = document.getElementById("closeBtn");
+  const dlBtn = document.getElementById("downloadICS");
+
+  // expose to openRoom
+  window.__mapEls = { backdrop, titleEl, openBadge, todaySummary, tableBody, closeBtn, dlBtn };
+
+  document.querySelectorAll(".hotspot").forEach(hs => {
+    hs.addEventListener("click", () => {
+      try {
+        openRoom(hs.dataset.room);
+      } catch (err) {
+        console.error("openRoom failed:", err);
+        alert("Script error—see console for details.");
+      }
+    });
+    // auto-label (non-interactive)
+    if (!hs.querySelector(".label")){
+      const lbl = document.createElement("div");
+      lbl.className = "label";
+      lbl.textContent = hs.dataset.room;
+      lbl.style.pointerEvents = "none";
+      hs.appendChild(lbl);
+    }
+  });
+
+  // close handlers
+  closeBtn.addEventListener("click", () => backdrop.classList.remove("show"));
+  backdrop.addEventListener("click", (e) => { if(e.target === backdrop) backdrop.classList.remove("show"); });
+});
 </script>
+
 </body></html>

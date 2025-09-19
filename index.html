@@ -32,6 +32,8 @@
 .small { color: #64748b; font-size: 12px; }
 .map-wrap img { display:block; width:100%; height:auto; pointer-events:none; }
 .hotspot { z-index: 2; }
+.hotspot .label { opacity: 0; transition: opacity .15s; }
+.hotspot:hover .label { opacity: 1; }
 </style>
 </head>
 <body>

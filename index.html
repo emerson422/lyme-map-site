@@ -30,6 +30,8 @@
 .modal footer .btn { background: #1a73e8; color: #fff; padding: 10px 14px; border: 0; border-radius: 10px; cursor: pointer; }
 .modal footer .btn.secondary { background: #f1f5f9; color: #0f172a; }
 .small { color: #64748b; font-size: 12px; }
+.map-wrap img { display:block; width:100%; height:auto; pointer-events:none; }
+.hotspot { z-index: 2; }
 </style>
 </head>
 <body>
@@ -264,25 +266,24 @@ function openRoom(room){
   const data = (schedules[room]||[]).slice().sort(sortEvents);
   titleEl.textContent = room;
 
- // Build the table: always include all days
-tableBody.innerHTML = "";
-for (const d of DAYS) {
-  const dayEvents = data.filter(x => x.day === d);
+  // Build the table: always include all days
+  tableBody.innerHTML = "";
+  for (const d of DAYS) {
+    const dayEvents = data.filter(x => x.day === d);
 
-  // Busy rows (if any)
-  for (const e of dayEvents) {
+    // Busy rows (if any)
+    for (const e of dayEvents) {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${d}</td><td><span class="swatch busy"></span>${e.start}–${e.end}</td><td>${e.title}</td>`;
+      tableBody.appendChild(tr);
+    }
+
+    // Available row (always)
+    const { free } = computeAvailability(dayEvents); // 08:00–22:00 if no events
+    const freeStr = free.length ? free.map(humanRange).join(", ") : "None during open hours";
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${d}</td><td><span class="swatch busy"></span>${e.start}–${e.end}</td><td>${e.title}</td>`;
+    tr.innerHTML = `<td>${d}</td><td><span class="swatch free"></span>${freeStr}</td><td>${dayEvents.length ? "Available" : "Available (no bookings)"}</td>`;
     tableBody.appendChild(tr);
-  }
-
-  // Available row (always)
-  const { free } = computeAvailability(dayEvents); // returns 08:00–22:00 if no events
-  const freeStr = free.length ? free.map(humanRange).join(", ") : "None during open hours";
-  const tr = document.createElement("tr");
-  tr.innerHTML = `<td>${d}</td><td><span class="swatch free"></span>${freeStr}</td><td>${dayEvents.length ? "Available" : "Available (no bookings)"}</td>`;
-  tableBody.appendChild(tr);
-}
   }
 
   // Today status + clearer "next change"
@@ -292,7 +293,7 @@ for (const d of DAYS) {
   const {busy, free} = computeAvailability(dayEvents);
   const nowMin = now.getHours()*60 + now.getMinutes();
   let status = "Open time right now";
-  for(const [s,e] of busy){ if(nowMin>=s && nowMin<e){ status = "In use right now"; break; } }
+  for (const [s,e] of busy) { if (nowMin>=s && nowMin<e) { status = "In use right now"; break; } }
 
   let nextChangeText = "No bookings today";
   if (dayEvents.length){
@@ -312,7 +313,7 @@ for (const d of DAYS) {
 
   todaySummary.innerHTML =
     `<strong>${today}:</strong> ${status}. ` +
-    `Free blocks: ${free.length? free.map(humanRange).join(", "):"None"}<br>` +
+    `Free blocks: ${free.length ? free.map(humanRange).join(", ") : "None"}<br>` +
     `<span class="small">${nextChangeText}. Open hours 08:00–22:00.</span>`;
 
   openBadge.textContent = status.includes("In use") ? "BUSY" : "OPEN";
@@ -323,6 +324,7 @@ for (const d of DAYS) {
 
   backdrop.classList.add("show");
 }
+
 
 /* =======================
    ICS export (TZ-safe)

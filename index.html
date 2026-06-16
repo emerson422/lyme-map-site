@@ -1,241 +1,908 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lyme Academy – Interactive Studio Map</title>
+<title>Lyme Academy – Summer 2026 Interactive Studio Map</title>
 <style>
 /* Base */
 .map-widget { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
 .map-widget * { box-sizing: border-box; }
 .map-wrap { position: relative; max-width: 900px; margin: 1rem auto; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,.12); }
-
-/* Map image: let clicks pass to hotspots */
 .map-wrap img { display:block; width:100%; height:auto; pointer-events:none; }
-
-/* Hotspots */
 .hotspot { position: absolute; z-index: 2; border: 2px solid rgba(255,255,255,.95); outline: 2px dashed rgba(0,0,0,.25); background: rgba(26,115,232,.08); border-radius: 8px; cursor: pointer; transition: transform .06s ease-in-out, box-shadow .1s; }
 .hotspot:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,0,0,.18); }
-
-/* Modal */
 .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 9999; padding: 1rem; }
 .modal-backdrop.show { display: flex; }
-.modal { width: min(720px,95vw); background: #fff; border-radius: 16px; box-shadow: 0 14px 50px rgba(0,0,0,.35); overflow: hidden; max-height: 90vh; display: grid; grid-template-rows: auto 1fr auto; }
-.modal header { padding: 16px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 12px; }
+.modal { width: min(820px,95vw); background: #fff; border-radius: 16px; box-shadow: 0 14px 50px rgba(0,0,0,.35); overflow: hidden; max-height: 90vh; display: grid; grid-template-rows: auto 1fr auto; }
+.modal header { padding: 16px 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .modal header h3 { margin: 0; font-size: 18px; }
 .badge { font-size: 12px; background: #eef2ff; color: #3730a3; padding: 2px 8px; border-radius: 999px; }
 .modal .content { padding: 16px 20px; overflow: auto; }
 .modal .content .today { background: #f8fafc; border: 1px solid #e5e7eb; padding: 12px; border-radius: 12px; margin-bottom: 14px; }
-
-/* Table */
 .table { width: 100%; border-collapse: collapse; font-size: 14px; }
-.table th, .table td { padding: 8px 10px; border-bottom: 1px solid #eee; text-align: left; }
-.table th { background: #fafafa; }
-
-/* Legend */
+.table th, .table td { padding: 8px 10px; border-bottom: 1px solid #eee; text-align: left; vertical-align: top; }
+.table th { background: #fafafa; position: sticky; top: 0; }
 .legend { display: flex; gap: 12px; align-items: center; font-size: 12px; margin: 10px 0 2px; }
 .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 6px; }
 .swatch.busy { background: #fca5a5; }
 .swatch.free { background: #86efac; }
-
-/* Footer */
-.modal footer { padding: 12px 20px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+.modal footer { padding: 12px 20px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .modal footer .btn { background: #1a73e8; color: #fff; padding: 10px 14px; border: 0; border-radius: 10px; cursor: pointer; }
 .modal footer .btn.secondary { background: #f1f5f9; color: #0f172a; }
 .small { color: #64748b; font-size: 12px; }
-
-/* Hide all hotspot labels (final, definitive rule) */
 .map-widget .hotspot .label { display: none !important; }
 </style>
 </head>
 <body>
 <div class="map-widget" id="lyme-map">
-  <div class="map-wrap">
-    <img src="Campus Map 2024.png" alt="Lyme Academy Campus Map">
+<div class="map-wrap">
+<img src="Campus Map 2024.png" alt="Lyme Academy Campus Map">
+<div class="hotspot" style="left: 49%;top: 13%;width: 9%;height: 7%;" data-room="Cole Studio"></div>
+<div class="hotspot" style="left: 62%;top: 65%;width: 9%;height: 5%;" data-room="Weir Studio"></div>
+<div class="hotspot" style="left: 51%;top: 65.5%;width: 8%;height: 5%;" data-room="Griswold Studio"></div>
+<div class="hotspot" style="left: 76%;top: 72%;width: 5%;height: 4%;" data-room="Cast Hall"></div>
+<div class="hotspot" style="left: 82%;top: 68%;width: 7%;height: 5%;" data-room="Library"></div>
+<div class="hotspot" style="left: 65%;top: 30%;width: 20%;height: 12%;" data-room="Student Studios"></div>
+<div class="hotspot" style="left: 66%;top: 86%;width: 10%;height: 6%;" data-room="Chandler Studio"></div>
+<div class="hotspot" style="left: 82%;top: 80%;width: 7%;height: 4.5%;" data-room="Southwick-Keller Studio"></div>
+<div class="hotspot" style="left: 60%;top: 43%;width: 10%;height: 5.5%;" data-room="Cafe Studio"></div>
+<div class="hotspot" style="left: 49%;top: 32%;width: 5%;height: 8%;" data-room="Dumond Studio"></div>
+<div class="hotspot" style="left: 60%;top: 56%;width: 10%;height: 4.5%;" data-room="Stobart Studio"></div>
+<div class="hotspot" style="left: 60%;top: 88%;width: 4%;height: 4.5%;" data-room="Casting Studio"></div>
+</div>
 
-    <!-- Hotspots (ensure data-room matches schedule keys exactly) -->
-    <div class="hotspot" style="left: 49%;top: 13%;width: 9%;height: 7%;" data-room="Cole Studio"></div>
-    <div class="hotspot" style="left: 62%;top: 65%;width: 9%;height: 5%;" data-room="Weir Studio"></div>
-    <div class="hotspot" style="left: 51%;top: 65.5%;width: 8%;height: 5%;" data-room="Griswold Studio"></div>
-    <div class="hotspot" style="left: 76%;top: 72%;width: 5%;height: 4%;" data-room="Cast Hall"></div>
-    <div class="hotspot" style="left: 82%;top: 68%;width: 7%;height: 5%;" data-room="Library"></div>
-    <div class="hotspot" style="left: 65%;top: 30%;width: 20%;height: 12%;" data-room="Student Studios"></div>
-    <div class="hotspot" style="left: 66%;top: 86%;width: 10%;height: 6%;" data-room="Chandler Studio"></div>
-    <div class="hotspot" style="left: 82%;top: 80%;width: 7%;height: 4.5%;" data-room="Southwick-Keller Studio"></div>
-    <div class="hotspot" style="left: 60%;top: 43%;width: 10%;height: 5.5%;" data-room="Cafe Studio"></div>
-    <div class="hotspot" style="left: 49%;top: 32%;width: 5%;height: 8%;" data-room="Dumond Studio"></div>
-    <div class="hotspot" style="left: 60%;top: 56%;width: 10%;height: 4.5%;" data-room="Stobart Studio"></div>
-    <div class="hotspot" style="left: 60%;top: 88%;width: 4%;height: 4.5%;" data-room="Casting Studio"></div>
-  </div>
-
-  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal" role="document" aria-labelledby="modalTitle">
-      <header>
-        <h3 id="modalTitle">Cast Hall</h3>
-        <span class="badge" id="openBadge" style="background: rgb(236, 253, 245); color: rgb(6, 95, 70);">OPEN</span>
-      </header>
-      <div class="content">
-        <div class="today" id="todaySummary">
-          <strong>Thu:</strong> Open time right now. Free blocks: 08:00–22:00<br>
-          <span class="small">No bookings today. Open hours 08:00–22:00.</span>
-        </div>
-        <div class="legend"><span class="swatch busy"></span>Booked <span class="swatch free"></span>Available</div>
-        <table class="table" id="scheduleTable" aria-describedby="modalTitle">
-          <thead><tr><th>Day</th><th>Time</th><th>Class / Use</th></tr></thead>
-          <tbody>
-            <tr><td>Tue</td><td><span class="swatch busy"></span>10:00–12:00</td><td>Anatomy Seminar</td></tr>
-            <tr><td>Tue</td><td><span class="swatch free"></span>08:00–10:00, 12:00–22:00</td><td>Available</td></tr>
-            <tr><td>Fri</td><td><span class="swatch busy"></span>14:00–16:00</td><td>Lecture / Crit</td></tr>
-            <tr><td>Fri</td><td><span class="swatch free"></span>08:00–14:00, 16:00–22:00</td><td>Available</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <footer>
-        <span class="small">Edit schedules below in <code>schedules</code>.</span>
-        <div>
-          <button class="btn secondary" id="downloadICS">Export week (.ics)</button>
-          <button class="btn" id="closeBtn">Close</button>
-        </div>
-      </footer>
-    </div>
-  </div>
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
+<div class="modal" role="document" aria-labelledby="modalTitle">
+<header>
+<h3 id="modalTitle">Summer 2026 Schedule</h3>
+<span class="badge" id="seasonBadge">SUMMER 2026</span>
+<span class="badge" id="openBadge">OPEN</span>
+</header>
+<div class="content">
+<div class="today" id="todaySummary"></div>
+<div class="legend"><span class="swatch busy"></span>Booked <span class="swatch free"></span>Available today during open hours</div>
+<table class="table" id="scheduleTable" aria-describedby="modalTitle">
+<thead><tr><th>Dates</th><th>Day</th><th>Time</th><th>Program</th><th>Class / Use</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<footer>
+<span class="small">To update without editing HTML, revise <code>schedules_summer_2026.csv</code> and keep the same filename/folder.</span>
+<div>
+<button class="btn secondary" id="downloadICS">Export schedule (.ics)</button>
+<button class="btn" id="closeBtn">Close</button>
+</div>
+</footer>
+</div>
+</div>
 </div>
 
 <script>
-/* =======================
-   DATA: Weekly schedules
-   ======================= */
-const schedules = {
+/* Optional: keep schedules_summer_2026.csv in the same folder as this HTML. Update that CSV in Excel/Google Sheets, re-upload it with the same filename, and the map updates without touching this HTML. If the CSV cannot load, the embedded backup below is used. */
+const DATA_CSV_URL = "schedules_summer_2026.csv";
+let schedules = {
   "Cole Studio": [
-    { day: "Mon", start: "13:00", end: "16:00", title: "C.E. Still Life" },
-    { day: "Tue", start: "09:00", end: "12:00", title: "Figure Drawing" },
-    { day: "Tue", start: "13:00", end: "16:00", title: "Figure Drawing" },
-    { day: "Tue", start: "17:00", end: "20:00", title: "Figure Drawing" },
-    { day: "Wed", start: "09:00", end: "12:00", title: "Figure Drawing" },
-    { day: "Wed", start: "17:00", end: "20:00", title: "C.E. Figure Drawing" },
-    { day: "Thu", start: "09:00", end: "12:00", title: "Figure Drawing" },
-    { day: "Thu", start: "15:00", end: "17:00", title: "Young Masters" },
-    { day: "Fri", start: "09:00", end: "12:00", title: "C.E. Figure Drawing" },
-    { day: "Sat", start: "09:00", end: "12:00", title: "Public Open Model" },
-    { day: "Sun", start: "13:30", end: "16:30", title: "Core/C.E. Open Model" },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Painting",
+      "program": "Youth",
+      "startDate": "07/06/2026",
+      "endDate": "07/10/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "13:00",
+      "end": "16:00",
+      "title": "Figure Drawing - Mondays",
+      "program": "Continuing Ed",
+      "startDate": "07/06/2026",
+      "endDate": "08/24/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Painting",
+      "program": "Youth",
+      "startDate": "07/06/2026",
+      "endDate": "07/10/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Painting",
+      "program": "Youth",
+      "startDate": "07/06/2026",
+      "endDate": "07/10/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Painting",
+      "program": "Youth",
+      "startDate": "07/06/2026",
+      "endDate": "07/10/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Painting",
+      "program": "Youth",
+      "startDate": "07/06/2026",
+      "endDate": "07/10/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "17:00",
+      "end": "20:00",
+      "title": "Figure Painting - Wednesdays",
+      "program": "Continuing Ed",
+      "startDate": "07/08/2026",
+      "endDate": "08/26/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Pre College Cast Drawing",
+      "program": "Youth",
+      "startDate": "07/20/2026",
+      "endDate": "07/24/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Pre College Cast Drawing",
+      "program": "Youth",
+      "startDate": "07/20/2026",
+      "endDate": "07/24/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Pre College Cast Drawing",
+      "program": "Youth",
+      "startDate": "07/20/2026",
+      "endDate": "07/24/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Pre College Cast Drawing",
+      "program": "Youth",
+      "startDate": "07/20/2026",
+      "endDate": "07/24/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Pre College Cast Drawing",
+      "program": "Youth",
+      "startDate": "07/20/2026",
+      "endDate": "07/24/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre-College Life Drawing",
+      "program": "Youth",
+      "startDate": "07/27/2026",
+      "endDate": "07/31/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre-College Life Drawing",
+      "program": "Youth",
+      "startDate": "07/27/2026",
+      "endDate": "07/31/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre-College Life Drawing",
+      "program": "Youth",
+      "startDate": "07/27/2026",
+      "endDate": "07/31/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre-College Life Drawing",
+      "program": "Youth",
+      "startDate": "07/27/2026",
+      "endDate": "07/31/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre-College Life Drawing",
+      "program": "Youth",
+      "startDate": "07/27/2026",
+      "endDate": "07/31/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre-College Life Drawing",
+      "program": "Youth",
+      "startDate": "08/10/2026",
+      "endDate": "08/14/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre-College Life Drawing",
+      "program": "Youth",
+      "startDate": "08/10/2026",
+      "endDate": "08/14/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre-College Life Drawing",
+      "program": "Youth",
+      "startDate": "08/10/2026",
+      "endDate": "08/14/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre-College Life Drawing",
+      "program": "Youth",
+      "startDate": "08/10/2026",
+      "endDate": "08/14/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre-College Life Drawing",
+      "program": "Youth",
+      "startDate": "08/10/2026",
+      "endDate": "08/14/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "16:30",
+      "title": "Painting The Still Life Workshop with Todd Casey",
+      "program": "Workshop",
+      "startDate": "08/17/2026",
+      "endDate": "08/21/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Cast Drawing",
+      "program": "Youth",
+      "startDate": "08/17/2026",
+      "endDate": "08/21/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "16:30",
+      "title": "Painting The Still Life Workshop with Todd Casey",
+      "program": "Workshop",
+      "startDate": "08/17/2026",
+      "endDate": "08/21/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Cast Drawing",
+      "program": "Youth",
+      "startDate": "08/17/2026",
+      "endDate": "08/21/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "16:30",
+      "title": "Painting The Still Life Workshop with Todd Casey",
+      "program": "Workshop",
+      "startDate": "08/17/2026",
+      "endDate": "08/21/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Cast Drawing",
+      "program": "Youth",
+      "startDate": "08/17/2026",
+      "endDate": "08/21/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "16:30",
+      "title": "Painting The Still Life Workshop with Todd Casey",
+      "program": "Workshop",
+      "startDate": "08/17/2026",
+      "endDate": "08/21/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Cast Drawing",
+      "program": "Youth",
+      "startDate": "08/17/2026",
+      "endDate": "08/21/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "16:30",
+      "title": "Painting The Still Life Workshop with Todd Casey",
+      "program": "Workshop",
+      "startDate": "08/17/2026",
+      "endDate": "08/21/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Cast Drawing",
+      "program": "Youth",
+      "startDate": "08/17/2026",
+      "endDate": "08/21/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Master Copy Painting",
+      "program": "Youth",
+      "startDate": "08/24/2026",
+      "endDate": "08/28/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Master Copy Painting",
+      "program": "Youth",
+      "startDate": "08/24/2026",
+      "endDate": "08/28/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Master Copy Painting",
+      "program": "Youth",
+      "startDate": "08/24/2026",
+      "endDate": "08/28/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Master Copy Painting",
+      "program": "Youth",
+      "startDate": "08/24/2026",
+      "endDate": "08/28/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Master Copy Painting",
+      "program": "Youth",
+      "startDate": "08/24/2026",
+      "endDate": "08/28/2026"
+    }
   ],
   "Weir Studio": [
-    { day: "Mon", start: "09:00", end: "12:00", title: "Figure Painting" },
-    { day: "Mon", start: "13:00", end: "16:00", title: "Figure Painting" },
-    { day: "Tue", start: "09:00", end: "12:00", title: "Figure Painting" },
-    { day: "Tue", start: "13:00", end: "16:00", title: "Figure Painting" },
-    { day: "Wed", start: "09:00", end: "12:00", title: "Figure Painting" },
-    { day: "Wed", start: "13:00", end: "16:00", title: "Figure Painting" },
-    { day: "Thu", start: "09:00", end: "12:00", title: "Figure Painting" },
-    { day: "Thu", start: "13:00", end: "16:00", title: "Figure Painting" },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Figure Drawing: Short & Long Poses with Jon deMartin",
+      "program": "Workshop",
+      "startDate": "07/13/2026",
+      "endDate": "07/15/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Figure Drawing: Short & Long Poses with Jon deMartin",
+      "program": "Workshop",
+      "startDate": "07/13/2026",
+      "endDate": "07/15/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Figure Drawing: Short & Long Poses with Jon deMartin",
+      "program": "Workshop",
+      "startDate": "07/13/2026",
+      "endDate": "07/15/2026"
+    }
   ],
-  "Griswold Studio": [
-    { day: "Wed", start: "09:00", end: "12:00", title: "Printmaking Open Studios" },
-    { day: "Sat", start: "10:30", end: "14:30", title: "Printmaking Open Studios" },
-  ],
-  "Dumond Studio": [
-    { day: "Mon", start: "09:00", end: "12:00", title: "C.E. Cast Drawing/Painting" },
-    { day: "Tue", start: "09:00", end: "12:00", title: "C.E. Cast Drawing/Painting" },
-    { day: "Tue", start: "15:00", end: "17:00", title: "Young Masters" },
-    { day: "Wed", start: "09:00", end: "12:00", title: "C.E. Cast Drawing/Painting" },
-    { day: "Thu", start: "09:00", end: "12:00", title: "C.E. Cast Drawing/Painting" },
-  ],
-  "Cafe Studio": [
-    { day: "Mon", start: "09:00", end: "12:00", title: "Figure Drawing" },
-    { day: "Mon", start: "13:00", end: "16:00", title: "Paint the Interior" },
-    { day: "Mon", start: "17:00", end: "20:00", title: "Figure Painting" },
-    { day: "Tue", start: "09:00", end: "12:00", title: "Figure Drawing" },
-    { day: "Tue", start: "13:00", end: "16:00", title: "Portrait Painting" },
-    { day: "Tue", start: "17:00", end: "20:00", title: "Figure Painting" },
-    { day: "Wed", start: "09:00", end: "12:00", title: "Figure Drawing" },
-    { day: "Wed", start: "13:00", end: "16:00", title: "Portrait Painting" },
-    { day: "Wed", start: "17:00", end: "20:00", title: "Figure Painting" },
-    { day: "Thu", start: "09:00", end: "12:00", title: "Figure Drawing" },
-    { day: "Thu", start: "13:00", end: "16:00", title: "Portrait Painting" },
-    { day: "Fri", start: "09:00", end: "12:00", title: "Figure Drawing" },
-    { day: "Fri", start: "13:00", end: "16:00", title: "Portrait Painting" },
-    { day: "Sat", start: "09:00", end: "12:00", title: "C.E. Portrait Drawing" },
-  ],
+  "Griswold Studio": [],
+  "Cast Hall": [],
+  "Library": [],
+  "Student Studios": [],
   "Chandler Studio": [
-    { day: "Mon", start: "09:00", end: "12:00", title: "Figure Modeling" },
-    { day: "Mon", start: "17:00", end: "20:00", title: "Terra Cotta" },
-    { day: "Tue", start: "09:00", end: "12:00", title: "Figure Modeling" },
-    { day: "Tue", start: "13:00", end: "16:00", title: "Composition III" },
-    { day: "Wed", start: "06:00", end: "08:00", title: "Sculpture Club" },
-    { day: "Wed", start: "09:00", end: "12:00", title: "Figure Modeling" },
-    { day: "Wed", start: "13:00", end: "16:00", title: "Independent Study" },
-    { day: "Wed", start: "17:00", end: "20:00", title: "Ecorche" },
-    { day: "Thu", start: "09:00", end: "12:00", title: "Figure Modeling" },
-    { day: "Thur", start: "13:00", end: "16:00", title: "Clay Cast Studies" },
-    { day: "Thu", start: "17:00", end: "20:00", title: "D&amp;P Sculpture" },
-    { day: "Fri", start: "09:00", end: "12:00", title: "Figure Modeling" },
-    { day: "Fri", start: "13:00", end: "16:00", title: "Clay Cast Studies" },
-    { day: "Sat", start: "09:00", end: "12:00", title: "C.E. Sculpture" },
-    { day: "Sat", start: "13:00", end: "16:00", title: "Core Sculpture Open Model" },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "The Portrait in Drawing and Sculpture with Dan Thompson",
+      "program": "Workshop",
+      "startDate": "07/06/2026",
+      "endDate": "07/10/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "The Portrait in Drawing and Sculpture with Dan Thompson",
+      "program": "Workshop",
+      "startDate": "07/06/2026",
+      "endDate": "07/10/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "The Portrait in Drawing and Sculpture with Dan Thompson",
+      "program": "Workshop",
+      "startDate": "07/06/2026",
+      "endDate": "07/10/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "The Portrait in Drawing and Sculpture with Dan Thompson",
+      "program": "Workshop",
+      "startDate": "07/06/2026",
+      "endDate": "07/10/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "The Portrait in Drawing and Sculpture with Dan Thompson",
+      "program": "Workshop",
+      "startDate": "07/06/2026",
+      "endDate": "07/10/2026"
+    },
+    {
+      "day": "Sat",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Figure Sculpture - Saturdays",
+      "program": "Continuing Ed",
+      "startDate": "07/11/2026",
+      "endDate": "08/05/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Ecorché of the Head Workshop with Stephen Perkins",
+      "program": "Workshop",
+      "startDate": "07/13/2026",
+      "endDate": "07/17/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Ecorché of the Head Workshop with Stephen Perkins",
+      "program": "Workshop",
+      "startDate": "07/13/2026",
+      "endDate": "07/17/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Ecorché of the Head Workshop with Stephen Perkins",
+      "program": "Workshop",
+      "startDate": "07/13/2026",
+      "endDate": "07/17/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Ecorché of the Head Workshop with Stephen Perkins",
+      "program": "Workshop",
+      "startDate": "07/13/2026",
+      "endDate": "07/17/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Ecorché of the Head Workshop with Stephen Perkins",
+      "program": "Workshop",
+      "startDate": "07/13/2026",
+      "endDate": "07/17/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Expressive Portraits in Clay Workshop with Heather Personett",
+      "program": "Workshop",
+      "startDate": "08/24/2026",
+      "endDate": "08/28/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Expressive Portraits in Clay Workshop with Heather Personett",
+      "program": "Workshop",
+      "startDate": "08/24/2026",
+      "endDate": "08/28/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Expressive Portraits in Clay Workshop with Heather Personett",
+      "program": "Workshop",
+      "startDate": "08/24/2026",
+      "endDate": "08/28/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Expressive Portraits in Clay Workshop with Heather Personett",
+      "program": "Workshop",
+      "startDate": "08/24/2026",
+      "endDate": "08/28/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Expressive Portraits in Clay Workshop with Heather Personett",
+      "program": "Workshop",
+      "startDate": "08/24/2026",
+      "endDate": "08/28/2026"
+    }
   ],
   "Southwick-Keller Studio": [
-    { day: "Mon", start: "09:00", end: "12:00", title: "Figure Modeling" },
-    { day: "Mon", start: "13:00", end: "16:00", title: "Modeling Techniques" },
-    { day: "Tue", start: "09:00", end: "12:00", title: "Figure Modeling" },
-    { day: "Tue", start: "13:00", end: "16:00", title: "Figure Modeling" },
-    { day: "Tue", start: "17:00", end: "20:00", title: "C.E. Sculpture" },
-    { day: "Wed", start: "09:00", end: "12:00", title: "Figure Modeling" },
-    { day: "Wed", start: "13:00", end: "16:00", title: "Figure Modeling" },
-    { day: "Thu", start: "09:00", end: "12:00", title: "Figure Modeling" },
-    { day: "Thu", start: "13:00", end: "16:00", title: "Figure Modeling" },
-    { day: "Fri", start: "09:00", end: "12:00", title: "Figure Modeling" },
-    { day: "Fri", start: "13:00", end: "16:00", title: "Composition I" },
-    { day: "Fri", start: "17:00", end: "20:00", title: "Guest Lectures" },
-    { day: "Sat", start: "13:00", end: "16:00", title: "C.E. Sculpture" },
+    {
+      "day": "Tue",
+      "start": "17:00",
+      "end": "20:00",
+      "title": "Portrait Sculpture - Tuesdays",
+      "program": "Continuing Ed",
+      "startDate": "07/07/2026",
+      "endDate": "08/25/2026"
+    },
+    {
+      "day": "Sat",
+      "start": "13:00",
+      "end": "16:00",
+      "title": "Introduction to Sculpture - Saturdays",
+      "program": "Continuing Ed",
+      "startDate": "07/11/2026",
+      "endDate": "08/29/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Sculpture",
+      "program": "Youth",
+      "startDate": "07/13/2026",
+      "endDate": "07/17/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Sculpture",
+      "program": "Youth",
+      "startDate": "07/13/2026",
+      "endDate": "07/17/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Sculpture",
+      "program": "Youth",
+      "startDate": "07/13/2026",
+      "endDate": "07/17/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Sculpture",
+      "program": "Youth",
+      "startDate": "07/13/2026",
+      "endDate": "07/17/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Sculpture",
+      "program": "Youth",
+      "startDate": "07/13/2026",
+      "endDate": "07/17/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Designing The Pose: A Figurative Sculpture Workshop With Alicia N. Ponzio",
+      "program": "Workshop",
+      "startDate": "08/03/2026",
+      "endDate": "08/07/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Designing The Pose: A Figurative Sculpture Workshop With Alicia N. Ponzio",
+      "program": "Workshop",
+      "startDate": "08/03/2026",
+      "endDate": "08/07/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Designing The Pose: A Figurative Sculpture Workshop With Alicia N. Ponzio",
+      "program": "Workshop",
+      "startDate": "08/03/2026",
+      "endDate": "08/07/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Designing The Pose: A Figurative Sculpture Workshop With Alicia N. Ponzio",
+      "program": "Workshop",
+      "startDate": "08/03/2026",
+      "endDate": "08/07/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "16:00",
+      "title": "Designing The Pose: A Figurative Sculpture Workshop With Alicia N. Ponzio",
+      "program": "Workshop",
+      "startDate": "08/03/2026",
+      "endDate": "08/07/2026"
+    }
   ],
-  "Cast Hall": [],
-  "Library": [
-    { day: "Tue", start: "17:00", end: "19:00", title: "Histories of Art I" },
-    { day: "Wed", start: "17:00", end: "19:00", title: "Professional Practice" },
-    { day: "Thu", start: "17:00", end: "19:00", title: "Histories of Art IV" },
-  ],
-  "Student Studios": [
-    { day: "Mon", start: "09:00", end: "12:00", title: "Cast Painting" },
-    { day: "Mon", start: "13:00", end: "16:00", title: "Cast Drawing" },
-    { day: "Mon", start: "17:00", end: "20:00", title: "Still Life/Color Theory, Sculpture Cast Drawing" },
-    { day: "Tue", start: "09:00", end: "12:00", title: "Cast Painting" },
-    { day: "Tue", start: "13:00", end: "16:00", title: "Cast Drawing" },
-    { day: "Wed", start: "09:00", end: "12:00", title: "Cast Painting" },
-    { day: "Wed", start: "13:00", end: "16:00", title: "Cast Drawing" },
-    { day: "Wed", start: "17:00", end: "20:00", title: "Sculpture Cast Drawing" },
-    { day: "Thu", start: "17:00", end: "20:00", title: "Sculpture Cast Drawing" },
+  "Cafe Studio": [],
+  "Dumond Studio": [
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Drawing",
+      "program": "Youth",
+      "startDate": "06/29/2026",
+      "endDate": "07/03/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Drawing",
+      "program": "Youth",
+      "startDate": "06/29/2026",
+      "endDate": "07/03/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Drawing",
+      "program": "Youth",
+      "startDate": "06/29/2026",
+      "endDate": "07/03/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Drawing",
+      "program": "Youth",
+      "startDate": "06/29/2026",
+      "endDate": "07/03/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Drawing",
+      "program": "Youth",
+      "startDate": "06/29/2026",
+      "endDate": "07/03/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Drawing Course - Mondays",
+      "program": "Continuing Ed",
+      "startDate": "07/06/2026",
+      "endDate": "08/24/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Drawing Course - Tuesdays",
+      "program": "Continuing Ed",
+      "startDate": "07/07/2026",
+      "endDate": "08/25/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Painting Course - Tuesdays",
+      "program": "Continuing Ed",
+      "startDate": "07/07/2026",
+      "endDate": "08/25/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Drawing Course - Thursdays",
+      "program": "Continuing Ed",
+      "startDate": "07/09/2026",
+      "endDate": "08/27/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Painting Course - Thursdays",
+      "program": "Continuing Ed",
+      "startDate": "07/09/2026",
+      "endDate": "08/27/2026"
+    }
   ],
   "Stobart Studio": [
-    { day: "Mon", start: "09:00", end: "12:00", title: "Sculpture Anatomy I" },
-    { day: "Mon", start: "13:00", end: "16:00", title: "Figure Drawing" },
-    { day: "Mon", start: "17:00", end: "20:00", title: "D&amp;P Anatomy I" },
-    { day: "Tue", start: "13:00", end: "16:00", title: "C.E. Figure Drawing" },
-    { day: "Wed", start: "13:00", end: "16:00", title: "Composition II" },
-    { day: "Wed", start: "17:00", end: "20:00", title: "Figure Drawing For Sculpture" },
-    { day: "Thu", start: "09:00", end: "12:00", title: "Portrait Painting" },
-    { day: "Thu", start: "13:00", end: "16:00", title: "Portrait Drawing" },
-    { day: "Fri", start: "09:00", end: "12:00", title: "Portrait Painting" },
-    { day: "Fri", start: "13:00", end: "16:00", title: "Portrait Drawing" },
-    { day: "Sat", start: "13:00", end: "16:00", title: "Open Model" },
-    { day: "Sat", start: "17:00", end: "20:00", title: "Open Model" },
+    {
+      "day": "Tue",
+      "start": "13:00",
+      "end": "16:00",
+      "title": "Anatomical Drawing - Tuesdays",
+      "program": "Continuing Ed",
+      "startDate": "07/07/2026",
+      "endDate": "08/25/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "17:00",
+      "end": "20:00",
+      "title": "Figure Drawing - Wednesdays",
+      "program": "Continuing Ed",
+      "startDate": "07/08/2026",
+      "endDate": "08/26/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "13:00",
+      "end": "16:00",
+      "title": "Figure Drawing - Thursdays",
+      "program": "Continuing Ed",
+      "startDate": "07/09/2026",
+      "endDate": "08/27/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "13:00",
+      "end": "16:00",
+      "title": "Figure Painting - Thursdays",
+      "program": "Continuing Ed",
+      "startDate": "07/09/2026",
+      "endDate": "08/27/2026"
+    },
+    {
+      "day": "Mon",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Portrait Drawing",
+      "program": "Youth",
+      "startDate": "08/03/2026",
+      "endDate": "08/07/2026"
+    },
+    {
+      "day": "Tue",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Portrait Drawing",
+      "program": "Youth",
+      "startDate": "08/03/2026",
+      "endDate": "08/07/2026"
+    },
+    {
+      "day": "Wed",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Portrait Drawing",
+      "program": "Youth",
+      "startDate": "08/03/2026",
+      "endDate": "08/07/2026"
+    },
+    {
+      "day": "Thu",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Portrait Drawing",
+      "program": "Youth",
+      "startDate": "08/03/2026",
+      "endDate": "08/07/2026"
+    },
+    {
+      "day": "Fri",
+      "start": "09:00",
+      "end": "15:00",
+      "title": "Pre College Portrait Drawing",
+      "program": "Youth",
+      "startDate": "08/03/2026",
+      "endDate": "08/07/2026"
+    }
   ],
-  "Casting Studio": [
-    { day: "Mon", start: "13:00", end: "16:00", title: "Mold Making" },
-    { day: "Thu", start: "13:00", end: "16:00", title: "Intro to Foundry/Stone" },
-    { day: "Thu", start: "17:00", end: "20:00", title: "Intro to Foundry/Stone" },
-  ]
+  "Casting Studio": []
 };
 
-/* =======================
-   Utils
-   ======================= */
 const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-function toMinutes(t){ const [H,M]=t.split(":").map(Number); return H*60+M; }
+function toMinutes(t){ const [H,M]=String(t).split(":").map(Number); return H*60+M; }
 function fromMinutes(m){ const h=String(Math.floor(m/60)).padStart(2,"0"); const mm=String(m%60).padStart(2,"0"); return `${h}:${mm}`; }
-function sortEvents(a,b){ if(a.day!==b.day){ return DAYS.indexOf(a.day)-DAYS.indexOf(b.day); } return toMinutes(a.start)-toMinutes(b.start); }
+function humanRange([s,e]){ return `${fromMinutes(s)}–${fromMinutes(e)}`; }
+function parseDate(s){ if(!s) return null; const [m,d,y]=String(s).split("/").map(Number); return new Date(y, m-1, d); }
+function sameOrAfter(a,b){ return a.setHours(0,0,0,0) >= b.setHours(0,0,0,0); }
+function sameOrBefore(a,b){ return a.setHours(0,0,0,0) <= b.setHours(0,0,0,0); }
+function formatDate(s){ const d=parseDate(s); if(!d) return ""; return d.toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"}); }
+function dateRange(e){ return e.startDate === e.endDate ? formatDate(e.startDate) : `${formatDate(e.startDate)}–${formatDate(e.endDate)}`; }
+function sortEvents(a,b){
+  const ad=parseDate(a.startDate), bd=parseDate(b.startDate);
+  if(ad && bd && ad-bd) return ad-bd;
+  if(a.day!==b.day) return DAYS.indexOf(a.day)-DAYS.indexOf(b.day);
+  return toMinutes(a.start)-toMinutes(b.start);
+}
+function escapeHtml(s){ return String(s ?? "").replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
 function computeAvailability(dayEvents, open="08:00", close="22:00"){
   const start=toMinutes(open), end=toMinutes(close);
-  const merged = dayEvents.slice().sort((a,b)=>toMinutes(a.start)-toMinutes(b.start));
-  const busy = [];
-  for(const e of merged){
+  const busy=[];
+  for(const e of dayEvents.slice().sort((a,b)=>toMinutes(a.start)-toMinutes(b.start))){
     const s=Math.max(toMinutes(e.start),start), ee=Math.min(toMinutes(e.end),end);
     if(ee<=s) continue;
     if(!busy.length || s>busy[busy.length-1][1]) busy.push([s,ee]); else busy[busy.length-1][1]=Math.max(busy[busy.length-1][1],ee);
@@ -245,148 +912,117 @@ function computeAvailability(dayEvents, open="08:00", close="22:00"){
   if(cursor<end) free.push([cursor,end]);
   return {busy, free};
 }
-function humanRange([s,e]){ return `${fromMinutes(s)}–${fromMinutes(e)}`; }
-
-/* =======================
-   Modal population
-   ======================= */
+function isActiveOnDate(e, date){
+  const start=parseDate(e.startDate), end=parseDate(e.endDate);
+  if(!start || !end) return false;
+  const copy=new Date(date.getFullYear(),date.getMonth(),date.getDate());
+  return sameOrAfter(new Date(copy), start) && sameOrBefore(new Date(copy), end) && e.day === DAYS[(date.getDay()+6)%7];
+}
 function openRoom(room){
   const { backdrop, titleEl, openBadge, todaySummary, tableBody, dlBtn } = window.__mapEls;
-
   const data = (schedules[room]||[]).slice().sort(sortEvents);
-  titleEl.textContent = room;
-
-  // Build the table: always include all days
+  titleEl.textContent = `${room} – Summer 2026 Schedule`;
   tableBody.innerHTML = "";
-  for (const d of DAYS) {
-    const dayEvents = data.filter(x => x.day === d);
-
-    // Busy rows (if any)
-    for (const e of dayEvents) {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${d}</td><td><span class="swatch busy"></span>${e.start}–${e.end}</td><td>${e.title}</td>`;
+  if(!data.length){
+    const tr=document.createElement("tr");
+    tr.innerHTML = `<td colspan="5">No Summer 2026 CE, Workshop, or Youth bookings are listed for this space.</td>`;
+    tableBody.appendChild(tr);
+  } else {
+    for(const e of data){
+      const tr=document.createElement("tr");
+      tr.innerHTML = `<td>${escapeHtml(dateRange(e))}</td><td>${escapeHtml(e.day)}</td><td><span class="swatch busy"></span>${escapeHtml(e.start)}–${escapeHtml(e.end)}</td><td>${escapeHtml(e.program)}</td><td>${escapeHtml(e.title)}</td>`;
       tableBody.appendChild(tr);
     }
-
-    // Available row (always)
-    const { free } = computeAvailability(dayEvents); // 08:00–22:00 if no events
-    const freeStr = free.length ? free.map(humanRange).join(", ") : "None during open hours";
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${d}</td><td><span class="swatch free"></span>${freeStr}</td><td>${dayEvents.length ? "Available" : "Available (no bookings)"}</td>`;
-    tableBody.appendChild(tr);
   }
-
-  // Today status + clearer "next change"
   const now = new Date();
-  const today = DAYS[(now.getDay()+6)%7];
-  const dayEvents = data.filter(x=>x.day===today);
-  const {busy, free} = computeAvailability(dayEvents);
+  const activeToday = data.filter(e => isActiveOnDate(e, now));
+  const {busy, free} = computeAvailability(activeToday);
   const nowMin = now.getHours()*60 + now.getMinutes();
-  let status = "Open time right now";
-  for (const [s,e] of busy) { if (nowMin>=s && nowMin<e) { status = "In use right now"; break; } }
-
-  let nextChangeText = "No bookings today";
-  if (dayEvents.length){
-    const changes = [];
-    for (const [s,e] of busy){ changes.push({t:s, type:"start"}); changes.push({t:e, type:"end"}); }
-    changes.sort((a,b)=>a.t-b.t);
-    const upcoming = changes.find(c => c.t > nowMin);
-    if (upcoming){
-      const hh = String(Math.floor(upcoming.t/60)).padStart(2,"0");
-      const mm = String(upcoming.t%60).padStart(2,"0");
-      const tstr = `${hh}:${mm}`;
-      nextChangeText = (status === "In use right now") ? `Ends at ${tstr}` : `Booked at ${tstr}`;
-    } else {
-      nextChangeText = "No more changes today";
-    }
+  const isBusy = busy.some(([s,e]) => nowMin>=s && nowMin<e);
+  const today = DAYS[(now.getDay()+6)%7];
+  const todayDate = now.toLocaleDateString(undefined, {month:"long", day:"numeric", year:"numeric"});
+  if(activeToday.length){
+    todaySummary.innerHTML = `<strong>${today}, ${todayDate}:</strong> ${isBusy ? "In use right now" : "Open time right now"}.<br>` +
+      `<span class="small">Today's bookings: ${activeToday.map(e => `${escapeHtml(e.start)}–${escapeHtml(e.end)} ${escapeHtml(e.title)}`).join("; ")}. Free blocks: ${free.length ? free.map(humanRange).join(", ") : "None"}.</span>`;
+  } else {
+    todaySummary.innerHTML = `<strong>${today}, ${todayDate}:</strong> No Summer 2026 bookings listed for today.<br><span class="small">Open hours 08:00–22:00. Free blocks: 08:00–22:00.</span>`;
   }
-
-  todaySummary.innerHTML =
-    `<strong>${today}:</strong> ${status}. ` +
-    `Free blocks: ${free.length ? free.map(humanRange).join(", ") : "None"}<br>` +
-    `<span class="small">${nextChangeText}. Open hours 08:00–22:00.</span>`;
-
-  openBadge.textContent = status.includes("In use") ? "BUSY" : "OPEN";
-  openBadge.style.background = status.includes("In use") ? "#fff7ed" : "#ecfdf5";
-  openBadge.style.color = status.includes("In use") ? "#9a3412" : "#065f46";
-
+  openBadge.textContent = isBusy ? "BUSY" : "OPEN";
+  openBadge.style.background = isBusy ? "#fff7ed" : "#ecfdf5";
+  openBadge.style.color = isBusy ? "#9a3412" : "#065f46";
   dlBtn.onclick = () => downloadICS(room, data);
-
   backdrop.classList.add("show");
 }
-
-/* =======================
-   ICS export (TZ-safe)
-   ======================= */
+function csvToRows(csv){
+  const rows=[]; let row=[], val='', inQuotes=false;
+  for(let i=0;i<csv.length;i++){
+    const c=csv[i], n=csv[i+1];
+    if(c==='"' && inQuotes && n==='"'){ val+='"'; i++; }
+    else if(c==='"') inQuotes=!inQuotes;
+    else if(c===',' && !inQuotes){ row.push(val); val=''; }
+    else if((c==='\n' || c==='\r') && !inQuotes){
+      if(c==='\r' && n==='\n') i++;
+      row.push(val); val='';
+      if(row.some(x=>x.trim()!=='')) rows.push(row);
+      row=[];
+    } else val+=c;
+  }
+  row.push(val); if(row.some(x=>x.trim()!=='')) rows.push(row);
+  return rows;
+}
+async function loadScheduleCSV(){
+  try {
+    const response = await fetch(DATA_CSV_URL, {cache: "no-store"});
+    if(!response.ok) throw new Error("CSV unavailable");
+    const rows = csvToRows(await response.text());
+    const headers = rows.shift().map(h => h.trim());
+    const next = {};
+    for(const r of rows){
+      const rec = Object.fromEntries(headers.map((h,i)=>[h,(r[i]||'').trim()]));
+      const room = rec.Room;
+      if(!room) continue;
+      next[room] ||= [];
+      next[room].push({program:rec.Program,title:rec.Title,day:rec.Day,start:rec["Start Time"],end:rec["End Time"],startDate:rec["Start Date"],endDate:rec["End Date"]});
+    }
+    for(const room in next) next[room].sort(sortEvents);
+    schedules = next;
+  } catch(err) {
+    console.info("Using embedded Summer 2026 schedule data because CSV was not loaded.", err);
+  }
+}
+function ymdLocal(d){ return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`; }
+function dateForDayInRange(startDate, endDate, day){
+  const start=parseDate(startDate), end=parseDate(endDate); if(!start||!end) return [];
+  const target=DAYS.indexOf(day); const dates=[]; const cur=new Date(start);
+  while(cur<=end){ if(((cur.getDay()+6)%7)===target) dates.push(new Date(cur)); cur.setDate(cur.getDate()+1); }
+  return dates;
+}
 function downloadICS(room, data){
-  const TZ = "America/New_York";
-
-  function formatLocal(dt){
-    const y = dt.getFullYear();
-    const m = String(dt.getMonth()+1).padStart(2,"0");
-    const d = String(dt.getDate()).padStart(2,"0");
-    const H = String(dt.getHours()).padStart(2,"0");
-    const M = String(dt.getMinutes()).padStart(2,"0");
-    const S = "00";
-    return `${y}${m}${d}T${H}${M}${S}`;
-  }
-
-  const now = new Date();
-  const thisMonday = new Date(now);
-  thisMonday.setDate(now.getDate() - ((now.getDay()+6)%7));
-  thisMonday.setHours(0,0,0,0);
-
-  function dateOn(day){
-    const idx = DAYS.indexOf(day);
-    const dt = new Date(thisMonday);
-    dt.setDate(thisMonday.getDate()+idx);
-    return dt;
-  }
-
-  function utcStamp(dt=new Date()){
-    return dt.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
-  }
-
-  let ics = "";
-  ics += "BEGIN:VCALENDAR\r\n";
-  ics += "VERSION:2.0\r\n";
-  ics += "PRODID:-//Lyme Academy//Interactive Map//EN\r\n";
-  ics += `X-WR-TIMEZONE:${TZ}\r\n`;
-
+  const TZ="America/New_York";
+  let ics="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Lyme Academy//Summer 2026 Interactive Map//EN\r\nX-WR-TIMEZONE:"+TZ+"\r\n";
   for(const e of data){
-    const d = dateOn(e.day);
-    const [sh,sm] = e.start.split(":").map(Number);
-    const [eh,em] = e.end.split(":").map(Number);
-
-    const dtstart = new Date(d); dtstart.setHours(sh, sm, 0, 0);
-    const dtend   = new Date(d); dtend.setHours(eh, em, 0, 0);
-
-    ics += "BEGIN:VEVENT\r\n";
-    ics += `UID:${Math.random().toString(36).slice(2)}@lyme\r\n`;
-    ics += `DTSTAMP:${utcStamp()}\r\n`;
-    ics += `DTSTART;TZID=${TZ}:${formatLocal(dtstart)}\r\n`;
-    ics += `DTEND;TZID=${TZ}:${formatLocal(dtend)}\r\n`;
-    ics += `SUMMARY:${room} – ${e.title}\r\n`;
-    ics += "END:VEVENT\r\n";
+    for(const d of dateForDayInRange(e.startDate,e.endDate,e.day)){
+      const uid = `${room}-${e.title}-${e.day}-${e.startDate}-${Math.random().toString(36).slice(2)}@lyme`.replace(/[^a-zA-Z0-9@.-]/g,'');
+      ics += "BEGIN:VEVENT\r\n";
+      ics += `UID:${uid}\r\n`;
+      ics += `DTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').split('.')[0]}Z\r\n`;
+      ics += `DTSTART;TZID=${TZ}:${ymdLocal(d)}T${e.start.replace(':','')}00\r\n`;
+      ics += `DTEND;TZID=${TZ}:${ymdLocal(d)}T${e.end.replace(':','')}00\r\n`;
+      ics += `SUMMARY:${room} – ${e.title}\r\n`;
+      ics += `DESCRIPTION:${e.program}; Summer 2026\r\n`;
+      ics += "END:VEVENT\r\n";
+    }
   }
-
   ics += "END:VCALENDAR\r\n";
-
   const blob = new Blob([ics], {type: "text/calendar"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
-  a.href = url;
-  a.download = `${room.replace(/\s+/g,'_')}_week.ics`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+  a.href = url; a.download = `${room.replace(/\s+/g,'_')}_summer_2026.ics`;
+  document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(url), 3000);
 }
-
-/* =======================
-   DOM wiring (after DOM ready)
-   ======================= */
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadScheduleCSV();
   const backdrop = document.getElementById("modalBackdrop");
   const titleEl = document.getElementById("modalTitle");
   const openBadge = document.getElementById("openBadge");
@@ -394,24 +1030,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const tableBody = document.querySelector("#scheduleTable tbody");
   const closeBtn = document.getElementById("closeBtn");
   const dlBtn = document.getElementById("downloadICS");
-
-  // Expose to openRoom
   window.__mapEls = { backdrop, titleEl, openBadge, todaySummary, tableBody, closeBtn, dlBtn };
-
-  // Wire hotspots
-  document.querySelectorAll(".hotspot").forEach(hs => {
-    hs.addEventListener("click", () => {
-      try { openRoom(hs.dataset.room); }
-      catch (err) {
-        console.error("openRoom failed:", err);
-        alert("Script error—see console for details.");
-      }
-    });
-  });
-
-  // Close handlers
+  document.querySelectorAll(".hotspot").forEach(hs => hs.addEventListener("click", () => openRoom(hs.dataset.room)));
   closeBtn.addEventListener("click", () => backdrop.classList.remove("show"));
-  backdrop.addEventListener("click", (e) => { if(e.target === backdrop) backdrop.classList.remove("show"); });
+  backdrop.addEventListener("click", e => { if(e.target === backdrop) backdrop.classList.remove("show"); });
 });
 </script>
 </body></html>

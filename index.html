@@ -9,12 +9,25 @@
 .map-wrap { position: relative; max-width: 900px; margin: 1rem auto; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,.12); }
 .map-wrap img { display:block; width:100%; height:auto; pointer-events:none; }
 .hotspot {
-  position:absolute; z-index:2; border:2px solid rgba(255,255,255,.95); outline:2px dashed rgba(0,0,0,.25);
-  background:rgba(26,115,232,.08); border-radius:8px; cursor:pointer; transition:transform .06s ease-in-out, box-shadow .1s;
+  position:absolute; z-index:2;
+  border:1px solid rgba(26,115,232,.42);
+  outline:none;
+  background:rgba(26,115,232,.045);
+  border-radius:6px;
+  cursor:pointer;
+  transition:background .12s ease, border-color .12s ease, box-shadow .12s ease;
   padding:0; appearance:none; -webkit-appearance:none;
 }
-.hotspot:hover { transform:translateY(-1px); box-shadow:0 6px 16px rgba(0,0,0,.18); }
-.hotspot:focus-visible { outline:3px solid #1a73e8; outline-offset:2px; background:rgba(26,115,232,.14); }
+.hotspot:hover {
+  background:rgba(26,115,232,.13);
+  border-color:rgba(26,115,232,.75);
+  box-shadow:0 2px 8px rgba(0,0,0,.14);
+}
+.hotspot:focus-visible {
+  outline:2px solid #1a73e8;
+  outline-offset:2px;
+  background:rgba(26,115,232,.13);
+}
 .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:9999; padding:1rem; }
 .modal-backdrop.show { display:flex; }
 .modal { width:min(920px,95vw); background:#fff; border-radius:16px; box-shadow:0 14px 50px rgba(0,0,0,.35); overflow:hidden; max-height:90vh; display:grid; grid-template-rows:auto 1fr auto; }
@@ -48,17 +61,17 @@
   <div class="map-wrap">
     <img src="campus-map-2026.png" alt="Lyme Academy of Fine Arts campus studio map">
 
-    <button class="hotspot" type="button" style="left:48.0%;top:16.2%;width:9.0%;height:9.0%;" data-room="Cole Studio" aria-label="Open Cole Studio schedule" title="Cole Studio"></button>
-    <button class="hotspot" type="button" style="left:48.2%;top:31.4%;width:6.4%;height:11.3%;" data-room="Dumond Studio" aria-label="Open Dumond Studio schedule" title="Dumond Studio"></button>
-    <button class="hotspot" type="button" style="left:60.2%;top:31.2%;width:18.1%;height:14.2%;" data-room="Cast Studios" aria-label="Open Cast Studios schedule" title="Cast Studios"></button>
-    <button class="hotspot" type="button" style="left:57.0%;top:43.0%;width:11.2%;height:6.4%;" data-room="Joffray Studio" aria-label="Open Joffray Studio schedule" title="Joffray Studio"></button>
-    <button class="hotspot" type="button" style="left:57.0%;top:54.5%;width:11.5%;height:5.8%;" data-room="Stobart Studio" aria-label="Open Stobart Studio schedule" title="Stobart Studio"></button>
-    <button class="hotspot" type="button" style="left:50.5%;top:61.0%;width:10.0%;height:7.2%;" data-room="Griswold Studio" aria-label="Open Griswold Studio schedule" title="Griswold Studio"></button>
-    <button class="hotspot" type="button" style="left:60.0%;top:61.0%;width:8.2%;height:7.2%;" data-room="Weir Studio" aria-label="Open Weir Studio schedule" title="Weir Studio"></button>
-    <button class="hotspot" type="button" style="left:73.0%;top:61.0%;width:11.5%;height:10.5%;" data-room="Wilson Riley Library" aria-label="Open Wilson Riley Library schedule" title="Wilson Riley Library"></button>
-    <button class="hotspot" type="button" style="left:74.8%;top:72.5%;width:10.3%;height:7.8%;" data-room="Southwick Keller Studio" aria-label="Open Southwick Keller Studio schedule" title="Southwick Keller Studio"></button>
-    <button class="hotspot" type="button" style="left:67.0%;top:78.5%;width:9.7%;height:8.6%;" data-room="Chandler Studio" aria-label="Open Chandler Studio schedule" title="Chandler Studio"></button>
-    <button class="hotspot" type="button" style="left:57.5%;top:81.0%;width:8.5%;height:8.5%;" data-room="Casting Studio" aria-label="Open Casting Studio schedule" title="Casting Studio"></button>
+    <button class="hotspot" type="button" style="left:49.8%;top:18.0%;width:5.0%;height:4.8%;" data-room="Cole Studio" aria-label="Open Cole Studio schedule" title="Cole Studio"></button>
+    <button class="hotspot" type="button" style="left:49.2%;top:34.4%;width:4.6%;height:5.4%;" data-room="Dumond Studio" aria-label="Open Dumond Studio schedule" title="Dumond Studio"></button>
+    <button class="hotspot" type="button" style="left:66.5%;top:35.7%;width:6.0%;height:5.0%;" data-room="Cast Studios" aria-label="Open Cast Studios schedule" title="Cast Studios"></button>
+    <button class="hotspot" type="button" style="left:60.2%;top:44.1%;width:5.0%;height:4.2%;" data-room="Joffray Studio" aria-label="Open Joffray Studio schedule" title="Joffray Studio"></button>
+    <button class="hotspot" type="button" style="left:60.3%;top:55.4%;width:5.0%;height:4.0%;" data-room="Stobart Studio" aria-label="Open Stobart Studio schedule" title="Stobart Studio"></button>
+    <button class="hotspot" type="button" style="left:53.0%;top:62.5%;width:5.0%;height:4.3%;" data-room="Griswold Studio" aria-label="Open Griswold Studio schedule" title="Griswold Studio"></button>
+    <button class="hotspot" type="button" style="left:61.8%;top:62.5%;width:4.6%;height:4.3%;" data-room="Weir Studio" aria-label="Open Weir Studio schedule" title="Weir Studio"></button>
+    <button class="hotspot" type="button" style="left:75.5%;top:63.6%;width:6.3%;height:5.6%;" data-room="Wilson Riley Library" aria-label="Open Wilson Riley Library schedule" title="Wilson Riley Library"></button>
+    <button class="hotspot" type="button" style="left:77.5%;top:74.2%;width:5.5%;height:4.7%;" data-room="Southwick Keller Studio" aria-label="Open Southwick Keller Studio schedule" title="Southwick Keller Studio"></button>
+    <button class="hotspot" type="button" style="left:69.2%;top:80.5%;width:5.5%;height:4.8%;" data-room="Chandler Studio" aria-label="Open Chandler Studio schedule" title="Chandler Studio"></button>
+    <button class="hotspot" type="button" style="left:59.5%;top:83.3%;width:4.6%;height:4.3%;" data-room="Casting Studio" aria-label="Open Casting Studio schedule" title="Casting Studio"></button>
 
   </div>
 

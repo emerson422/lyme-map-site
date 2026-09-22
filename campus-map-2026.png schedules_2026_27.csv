@@ -1,0 +1,1868 @@
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lyme Academy – 2026–27 Interactive Studio Map</title>
+<style>
+/* Base */
+.map-widget { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+.map-widget * { box-sizing: border-box; }
+.map-wrap { position: relative; max-width: 900px; margin: 1rem auto; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,.12); }
+.map-wrap img { display:block; width:100%; height:auto; pointer-events:none; }
+.hotspot {
+  position: absolute;
+  z-index: 2;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 2px solid #ffffff;
+  outline: 1px solid rgba(15,23,42,.45);
+  background: rgba(26,115,232,.82);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,.28);
+  transition: transform .08s ease, box-shadow .1s ease, background .1s ease;
+}
+.hotspot::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 38px;
+  height: 38px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+}
+.hotspot:hover {
+  transform: translate(-50%, -50%) scale(1.18);
+  background: rgba(26,115,232,1);
+  box-shadow: 0 3px 10px rgba(0,0,0,.32);
+}
+.hotspot:focus-visible {
+  outline: 3px solid rgba(26,115,232,.42);
+  outline-offset: 3px;
+}
+@media (max-width: 600px) {
+  .hotspot { width: 15px; height: 15px; }
+  .hotspot::after { width: 34px; height: 34px; }
+}
+.modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:9999; padding:1rem; }
+.modal-backdrop.show { display:flex; }
+.modal { width:min(920px,95vw); background:#fff; border-radius:16px; box-shadow:0 14px 50px rgba(0,0,0,.35); overflow:hidden; max-height:90vh; display:grid; grid-template-rows:auto 1fr auto; }
+.modal header { padding:16px 20px; border-bottom:1px solid #eee; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.modal header h3 { margin:0; font-size:18px; }
+.badge { font-size:12px; background:#eef2ff; color:#3730a3; padding:2px 8px; border-radius:999px; }
+.modal .content { padding:16px 20px; overflow:auto; }
+.modal .content .today { background:#f8fafc; border:1px solid #e5e7eb; padding:12px; border-radius:12px; margin-bottom:14px; }
+.table { width:100%; border-collapse:collapse; font-size:14px; }
+.table th, .table td { padding:8px 10px; border-bottom:1px solid #eee; text-align:left; vertical-align:top; }
+.table th { background:#fafafa; position:sticky; top:0; }
+.legend { display:flex; gap:12px; align-items:center; font-size:12px; margin:10px 0 2px; flex-wrap:wrap; }
+.swatch { width:10px; height:10px; border-radius:2px; display:inline-block; margin-right:6px; }
+.swatch.busy { background:#fca5a5; }
+.swatch.free { background:#86efac; }
+.modal footer { padding:12px 20px; border-top:1px solid #eee; display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+.modal footer .btn { background:#1a73e8; color:#fff; padding:10px 14px; border:0; border-radius:10px; cursor:pointer; }
+.modal footer .btn.secondary { background:#f1f5f9; color:#0f172a; }
+.small { color:#64748b; font-size:12px; }
+.note { color:#64748b; font-size:12px; margin-top:3px; }
+@media (max-width:700px) {
+  .modal { width:97vw; }
+  .modal .content { padding:12px; }
+  .table { font-size:12px; }
+  .table th, .table td { padding:7px 6px; }
+}
+</style>
+</head>
+<body>
+<div class="map-widget" id="lyme-map">
+  <div class="map-wrap">
+    <img src="campus-map-2026.png" alt="Lyme Academy of Fine Arts campus studio map">
+
+    <button class="hotspot" type="button" style="left:52.3%;top:20.4%;" data-room="Cole Studio" aria-label="Open Cole Studio schedule" title="Cole Studio"></button>
+    <button class="hotspot" type="button" style="left:51.5%;top:37.1%;" data-room="Dumond Studio" aria-label="Open Dumond Studio schedule" title="Dumond Studio"></button>
+    <button class="hotspot" type="button" style="left:69.5%;top:38.2%;" data-room="Cast Studios" aria-label="Open Cast Studios schedule" title="Cast Studios"></button>
+    <button class="hotspot" type="button" style="left:62.7%;top:46.2%;" data-room="Joffray Studio" aria-label="Open Joffray Studio schedule" title="Joffray Studio"></button>
+    <button class="hotspot" type="button" style="left:62.8%;top:57.4%;" data-room="Stobart Studio" aria-label="Open Stobart Studio schedule" title="Stobart Studio"></button>
+    <button class="hotspot" type="button" style="left:55.5%;top:64.65%;" data-room="Griswold Studio" aria-label="Open Griswold Studio schedule" title="Griswold Studio"></button>
+    <button class="hotspot" type="button" style="left:64.1%;top:64.65%;" data-room="Weir Studio" aria-label="Open Weir Studio schedule" title="Weir Studio"></button>
+    <button class="hotspot" type="button" style="left:78.65%;top:66.4%;" data-room="Wilson Riley Library" aria-label="Open Wilson Riley Library schedule" title="Wilson Riley Library"></button>
+    <button class="hotspot" type="button" style="left:80.25%;top:76.55%;" data-room="Southwick Keller Studio" aria-label="Open Southwick Keller Studio schedule" title="Southwick Keller Studio"></button>
+    <button class="hotspot" type="button" style="left:71.95%;top:82.9%;" data-room="Chandler Studio" aria-label="Open Chandler Studio schedule" title="Chandler Studio"></button>
+    <button class="hotspot" type="button" style="left:61.8%;top:85.45%;" data-room="Casting Studio" aria-label="Open Casting Studio schedule" title="Casting Studio"></button>
+
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document" aria-labelledby="modalTitle">
+      <header>
+        <h3 id="modalTitle">2026–27 Studio Schedule</h3>
+        <span class="badge" id="seasonBadge">2026–27</span>
+        <span class="badge" id="openBadge">OPEN</span>
+      </header>
+      <div class="content">
+        <div class="today" id="todaySummary"></div>
+        <div class="legend">
+          <span><span class="swatch busy"></span>Booked / scheduled</span>
+          <span><span class="swatch free"></span>Available today during open hours</span>
+        </div>
+        <table class="table" id="scheduleTable" aria-describedby="modalTitle">
+          <thead><tr><th>Dates</th><th>Day</th><th>Time</th><th>Program</th><th>Class / Use</th><th>Instructor / Lead</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <footer>
+        <span class="small">To update the schedule without editing this HTML, revise <code>schedules_2026_27.csv</code> and keep the same filename/folder.</span>
+        <div>
+          <button class="btn secondary" id="downloadICS">Export schedule (.ics)</button>
+          <button class="btn" id="closeBtn">Close</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<script>
+/*
+  2026–27 master studio map.
+  Optional external data file: schedules_2026_27.csv in the same folder.
+  If the CSV cannot load, the embedded backup below is used.
+*/
+const DATA_CSV_URL = "schedules_2026_27.csv";
+const OPEN_TIME = "05:30";
+const CLOSE_TIME = "22:30";
+const MASTER_START = "09/28/2026";
+const MASTER_END = "06/18/2027";
+
+let schedules = {
+  "Cole Studio": [
+    {
+      "room": "Cole Studio",
+      "day": "Mon",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Sculpture Figure Drawing I–III",
+      "program": "Core Sculpture Year 1",
+      "instructor": "Marina Melluzzo",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cole Studio",
+      "day": "Mon",
+      "start": "13:00",
+      "end": "16:00",
+      "title": "Figure Drawing",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "09/28/2026",
+      "endDate": "12/07/2026",
+      "instructor": "Isabella Antolic-Soban",
+      "notes": ""
+    },
+    {
+      "room": "Cole Studio",
+      "day": "Mon",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Figure Drawing Short Pose I–III",
+      "program": "Core Drawing Year 1 – Cohort B",
+      "instructor": "Christina Cruz",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cole Studio",
+      "day": "Tue",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Sculpture Figure Drawing I–III",
+      "program": "Core Sculpture Year 1",
+      "instructor": "Isabella Antolic-Soban",
+      "notes": "Attendance/course-exception block.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cole Studio",
+      "day": "Tue",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Sculpture Figure Drawing IV–VI",
+      "program": "Core Sculpture Year 2",
+      "instructor": "Hollis Dunlap",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cole Studio",
+      "day": "Tue",
+      "start": "17:00",
+      "end": "20:00",
+      "title": "Portrait Drawing",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "09/29/2026",
+      "endDate": "12/08/2026",
+      "instructor": "Isabella Antolic-Soban",
+      "notes": ""
+    },
+    {
+      "room": "Cole Studio",
+      "day": "Wed",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Sculpture Figure Drawing I–III",
+      "program": "Core Sculpture Year 1",
+      "instructor": "Bobby Vionis",
+      "notes": "Attendance/course-exception block.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cole Studio",
+      "day": "Wed",
+      "start": "13:00",
+      "end": "16:00",
+      "title": "Alla Prima Still Life",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "09/30/2026",
+      "endDate": "12/09/2026",
+      "instructor": "Todd Casey",
+      "notes": ""
+    },
+    {
+      "room": "Cole Studio",
+      "day": "Wed",
+      "start": "17:00",
+      "end": "20:00",
+      "title": "Figure Drawing",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "09/30/2026",
+      "endDate": "12/09/2026",
+      "instructor": "Rick Lacey",
+      "notes": ""
+    },
+    {
+      "room": "Cole Studio",
+      "day": "Thu",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Figure Drawing",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "10/01/2026",
+      "endDate": "12/10/2026",
+      "instructor": "Christina Cruz",
+      "notes": ""
+    },
+    {
+      "room": "Cole Studio",
+      "day": "Thu",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Sculpture Figure Drawing IV–VI",
+      "program": "Core Sculpture Year 2",
+      "instructor": "Chad Fisher",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cole Studio",
+      "day": "Fri",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Sculpture Figure Drawing IV–VI",
+      "program": "Core Sculpture Year 2",
+      "instructor": "Uninstructed",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    }
+  ],
+  "Dumond Studio": [
+    {
+      "room": "Dumond Studio",
+      "day": "Mon",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Drawing Course",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "09/28/2026",
+      "endDate": "12/07/2026",
+      "instructor": "Emily Archer",
+      "notes": ""
+    },
+    {
+      "room": "Dumond Studio",
+      "day": "Mon",
+      "start": "17:00",
+      "end": "20:00",
+      "title": "Drawing Course",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "09/28/2026",
+      "endDate": "12/07/2026",
+      "instructor": "Emily Archer",
+      "notes": ""
+    },
+    {
+      "room": "Dumond Studio",
+      "day": "Tue",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Drawing Course",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "09/29/2026",
+      "endDate": "12/08/2026",
+      "instructor": "Rick Lacey",
+      "notes": ""
+    },
+    {
+      "room": "Dumond Studio",
+      "day": "Tue",
+      "start": "15:00",
+      "end": "17:00",
+      "timeLabel": "3:00–5:00 PM",
+      "title": "Young Masters",
+      "program": "Young Masters",
+      "instructor": "",
+      "notes": "Added per request.",
+      "startDate": "09/29/2026",
+      "endDate": "12/08/2026",
+      "dateLabel": "Fall 2026"
+    },
+    {
+      "room": "Dumond Studio",
+      "day": "Wed",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Drawing Course",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "09/30/2026",
+      "endDate": "12/09/2026",
+      "instructor": "Jairus Kiyabu",
+      "notes": ""
+    },
+    {
+      "room": "Dumond Studio",
+      "day": "Wed",
+      "start": "13:00",
+      "end": "16:00",
+      "title": "Drawing Course",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "09/30/2026",
+      "endDate": "12/09/2026",
+      "instructor": "Isabella Antolic-Soban",
+      "notes": ""
+    },
+    {
+      "room": "Dumond Studio",
+      "day": "Thu",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Drawing Course",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "10/01/2026",
+      "endDate": "12/10/2026",
+      "instructor": "Rick Lacey",
+      "notes": ""
+    },
+    {
+      "room": "Dumond Studio",
+      "day": "Thu",
+      "start": "15:00",
+      "end": "17:00",
+      "timeLabel": "3:00–5:00 PM",
+      "title": "Young Masters",
+      "program": "Young Masters",
+      "instructor": "",
+      "notes": "Added per request.",
+      "startDate": "10/01/2026",
+      "endDate": "12/10/2026",
+      "dateLabel": "Fall 2026"
+    },
+    {
+      "room": "Dumond Studio",
+      "day": "Fri",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Drawing Course",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "10/02/2026",
+      "endDate": "12/11/2026",
+      "instructor": "Rick Lacey",
+      "notes": ""
+    }
+  ],
+  "Cast Studios": [
+    {
+      "room": "Cast Studios",
+      "day": "Mon",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Cast Painting I–III",
+      "program": "Core Painting Year 2",
+      "instructor": "Scott Garder",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cast Studios",
+      "day": "Tue",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Cast Painting I–III",
+      "program": "Core Painting Year 2",
+      "instructor": "Kate Kristian",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cast Studios",
+      "day": "Wed",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Cast Drawing I–III",
+      "program": "Core Drawing Year 1 – Cohort B",
+      "instructor": "Kate Kristian",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cast Studios",
+      "day": "Wed",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Cast Drawing I–III",
+      "program": "Core Drawing Year 1 – Cohort A",
+      "instructor": "Kate Kristian",
+      "notes": "CONCURRENT USE: another class is also scheduled in Cast Studios at this time.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cast Studios",
+      "day": "Wed",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Cast Painting I–III",
+      "program": "Core Painting Year 2",
+      "instructor": "Jairus Kiyabu",
+      "notes": "CONCURRENT USE: another class is also scheduled in Cast Studios at this time.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cast Studios",
+      "day": "Wed",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Color Theory + Still Life I–III",
+      "program": "Core Painting Year 3",
+      "instructor": "Todd Casey",
+      "notes": "Only 3rd Year students.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cast Studios",
+      "day": "Thu",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Cast Drawing I–III",
+      "program": "Core Drawing Year 1 – Cohort B",
+      "instructor": "Jairus Kiyabu",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cast Studios",
+      "day": "Thu",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Cast Drawing I–III",
+      "program": "Core Drawing Year 1 – Cohort A",
+      "instructor": "Jairus Kiyabu",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cast Studios",
+      "day": "Fri",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Cast Drawing I–III",
+      "program": "Core Drawing Year 1 – Cohort B",
+      "instructor": "Daniel McDonald",
+      "notes": "Attendance/course-exception block.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Cast Studios",
+      "day": "Fri",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Cast Drawing I–III",
+      "program": "Core Drawing Year 1 – Cohort A",
+      "instructor": "Daniel McDonald",
+      "notes": "Attendance/course-exception block.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    }
+  ],
+  "Joffray Studio": [
+    {
+      "room": "Joffray Studio",
+      "day": "Mon",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Drawing Long Pose I–III",
+      "program": "Core Drawing Year 1 – Cohort A",
+      "instructor": "Christina Cruz",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Joffray Studio",
+      "day": "Mon",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Figure Drawing Long Pose I–III",
+      "program": "Core Drawing Year 1 – Cohort B",
+      "instructor": "Christina Cruz",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Joffray Studio",
+      "day": "Mon",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Figure Painting Short Pose I–VI – shared/cross-listed",
+      "program": "Core Painting Years 2–3",
+      "instructor": "Hollis Dunlap",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Joffray Studio",
+      "day": "Tue",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Drawing Long Pose I–III",
+      "program": "Core Drawing Year 1 – Cohort A",
+      "instructor": "Edmond Rochat",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Joffray Studio",
+      "day": "Tue",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Figure Drawing Long Pose I–III",
+      "program": "Core Drawing Year 1 – Cohort B",
+      "instructor": "Edmond Rochat",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Joffray Studio",
+      "day": "Wed",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Drawing Long Pose I–III",
+      "program": "Core Drawing Year 1 – Cohort A",
+      "instructor": "Uninstructed / Studio monitor",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Joffray Studio",
+      "day": "Wed",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Figure Drawing Long Pose I–III",
+      "program": "Core Drawing Year 1 – Cohort B",
+      "instructor": "Uninstructed",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Joffray Studio",
+      "day": "Wed",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Open Figure Drawing",
+      "program": "Open Studio – Core",
+      "instructor": "Uninstructed",
+      "notes": "Shared open session; model needed.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Joffray Studio",
+      "day": "Thu",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Drawing Long Pose I–III",
+      "program": "Core Drawing Year 1 – Cohort A",
+      "instructor": "Amaya Gurpide",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Joffray Studio",
+      "day": "Thu",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Figure Drawing Long Pose I–III",
+      "program": "Core Drawing Year 1 – Cohort B",
+      "instructor": "Amaya Gurpide",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Joffray Studio",
+      "day": "Thu",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Figure Drawing Short Pose I–III",
+      "program": "Core Drawing Year 1 – Cohort A",
+      "instructor": "Christina Cruz",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Joffray Studio",
+      "day": "Fri",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Drawing Long Pose I–III",
+      "program": "Core Drawing Year 1 – Cohort A",
+      "instructor": "Kate Kristian",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Joffray Studio",
+      "day": "Fri",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Figure Drawing Long Pose I–III",
+      "program": "Core Drawing Year 1 – Cohort B",
+      "instructor": "Kate Kristian",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    }
+  ],
+  "Stobart Studio": [
+    {
+      "room": "Stobart Studio",
+      "day": "Mon",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Portrait Drawing I–III",
+      "program": "Core Drawing Year 1 – Cohort B",
+      "instructor": "Kate Kristian",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Stobart Studio",
+      "day": "Mon",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Portrait Drawing I–III",
+      "program": "Core Drawing Year 1 – Cohort A",
+      "instructor": "Kate Kristian",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Stobart Studio",
+      "day": "Mon",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Anatomy I–III",
+      "program": "Core Drawing Year 1 – Cohort A",
+      "instructor": "Edmond Rochat",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Stobart Studio",
+      "day": "Tue",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Portrait Drawing I–III",
+      "program": "Core Drawing Year 1 – Cohort B",
+      "instructor": "Scott Garder",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Stobart Studio",
+      "day": "Tue",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Portrait Drawing I–III",
+      "program": "Core Drawing Year 1 – Cohort A",
+      "instructor": "Scott Garder",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Stobart Studio",
+      "day": "Tue",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Sculpture Figure Drawing VII–XII – shared block",
+      "program": "Core Sculpture Years 3–4",
+      "instructor": "Hollis Dunlap",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Stobart Studio",
+      "day": "Wed",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Sculpture Figure Drawing VII–XII – shared block",
+      "program": "Core Sculpture Years 3–4",
+      "instructor": "Uninstructed",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Stobart Studio",
+      "day": "Thu",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Anatomy I–III",
+      "program": "Core Sculpture Year 1",
+      "instructor": "Edmond Rochat",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Stobart Studio",
+      "day": "Thu",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Anatomy I–III",
+      "program": "Core Drawing Year 1 – Cohort B",
+      "instructor": "Edmond Rochat",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Stobart Studio",
+      "day": "Fri",
+      "start": "13:00",
+      "end": "16:00",
+      "title": "Anatomical Drawing",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "10/02/2026",
+      "endDate": "12/11/2026",
+      "instructor": "Jairus Kiyabu",
+      "notes": ""
+    }
+  ],
+  "Griswold Studio": [
+    {
+      "room": "Griswold Studio",
+      "day": "Mon",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Cast Drawing I–III",
+      "program": "Core Sculpture Year 1",
+      "instructor": "Sebastian Villada",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Griswold Studio",
+      "day": "Wed",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Cast Drawing I–III",
+      "program": "Core Sculpture Year 1",
+      "instructor": "Uninstructed",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Griswold Studio",
+      "day": "Thu",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Cast Drawing I–III",
+      "program": "Core Sculpture Year 1",
+      "instructor": "Sebastian Villada",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Griswold Studio",
+      "day": "Fri",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Composition IV–VI",
+      "program": "Core Sculpture Year 2",
+      "instructor": "Zach Kainz",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Griswold Studio",
+      "day": "Fri",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Composition I–III & VII–IX – shared/cross-listed block",
+      "program": "Core Sculpture Years 1 + 3",
+      "instructor": "Zach Kainz",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    }
+  ],
+  "Weir Studio": [
+    {
+      "room": "Weir Studio",
+      "day": "Mon",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Painting Long Pose I–VI – shared/cross-listed",
+      "program": "Core Painting Years 2–3",
+      "instructor": "Hollis Dunlap",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Weir Studio",
+      "day": "Tue",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Painting Long Pose I–VI – shared/cross-listed",
+      "program": "Core Painting Years 2–3",
+      "instructor": "Jordan Sokol",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Weir Studio",
+      "day": "Wed",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Painting Long Pose I–VI – shared/cross-listed",
+      "program": "Core Painting Years 2–3",
+      "instructor": "Uninstructed / Studio monitor",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Weir Studio",
+      "day": "Wed",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Painting the Interior I–III",
+      "program": "Core Painting Year 3",
+      "instructor": "Hollis Dunlap",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Weir Studio",
+      "day": "Thu",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Painting Long Pose I–VI – shared/cross-listed",
+      "program": "Core Painting Years 2–3",
+      "instructor": "David Baird",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Weir Studio",
+      "day": "Thu",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Portrait Painting I–VI – shared block",
+      "program": "Core Painting Years 2–3",
+      "instructor": "David Baird",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Weir Studio",
+      "day": "Fri",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Painting Long Pose I–VI – shared/cross-listed",
+      "program": "Core Painting Years 2–3",
+      "instructor": "David Baird",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Weir Studio",
+      "day": "Fri",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Portrait Painting I–VI – shared block",
+      "program": "Core Painting Years 2–3",
+      "instructor": "David Baird",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    }
+  ],
+  "Wilson Riley Library": [
+    {
+      "room": "Wilson Riley Library",
+      "day": "Tue",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Histories of Art I–III – shared block",
+      "program": "Core Drawing Year 1 + Sculpture Year 1",
+      "instructor": "Emily Weeks",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Wilson Riley Library",
+      "day": "Thu",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Histories of Art IV–VI – shared block",
+      "program": "Core Painting Year 2 + Sculpture Year 2",
+      "instructor": "Emily Weeks",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    }
+  ],
+  "Southwick Keller Studio": [
+    {
+      "room": "Southwick Keller Studio",
+      "day": "Mon",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Modeling Long Pose IV–VI",
+      "program": "Core Sculpture Year 2",
+      "instructor": "Heather Personett",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Southwick Keller Studio",
+      "day": "Mon",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Clay Cast Studies I–III",
+      "program": "Core Sculpture Year 1",
+      "instructor": "Elizabeth Conway",
+      "notes": "CONCURRENT USE: Model Techniques is also scheduled in Southwick Keller at this time.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Southwick Keller Studio",
+      "day": "Mon",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Model Techniques / Terracotta IV–IX – shared block",
+      "program": "Core Sculpture Years 2–3",
+      "instructor": "Heather Personett",
+      "notes": "CONCURRENT USE: Clay Cast Studies is also scheduled in Southwick Keller at this time.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Southwick Keller Studio",
+      "day": "Mon",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Philosophy I–III",
+      "program": "Core Sculpture Year 3",
+      "instructor": "Heather Personett / Steve Perkins",
+      "notes": "Instructor varies by trimester.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Southwick Keller Studio",
+      "day": "Tue",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Modeling Long Pose IV–VI",
+      "program": "Core Sculpture Year 2",
+      "instructor": "Heather Personett",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Southwick Keller Studio",
+      "day": "Tue",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Figure Modeling Long Pose I–III",
+      "program": "Core Sculpture Year 1",
+      "instructor": "Chad Fisher",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Southwick Keller Studio",
+      "day": "Wed",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Modeling Long Pose IV–VI",
+      "program": "Core Sculpture Year 2",
+      "instructor": "Chad Fisher",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Southwick Keller Studio",
+      "day": "Wed",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Figure Modeling Long Pose I–III",
+      "program": "Core Sculpture Year 1",
+      "instructor": "Steve Perkins",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Southwick Keller Studio",
+      "day": "Thu",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Modeling Long Pose IV–VI",
+      "program": "Core Sculpture Year 2",
+      "instructor": "Joseph Van Buren",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Southwick Keller Studio",
+      "day": "Thu",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Figure Modeling Long Pose I–III",
+      "program": "Core Sculpture Year 1",
+      "instructor": "Steve Perkins",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Southwick Keller Studio",
+      "day": "Fri",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Modeling Short Pose I–III",
+      "program": "Core Sculpture Year 1",
+      "instructor": "Joseph Van Buren",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Southwick Keller Studio",
+      "day": "Sat",
+      "start": "13:00",
+      "end": "16:00",
+      "title": "Introduction to Sculpture",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "10/03/2026",
+      "endDate": "12/12/2026",
+      "instructor": "Elizabeth (Liz) Conway",
+      "notes": ""
+    }
+  ],
+  "Chandler Studio": [
+    {
+      "room": "Chandler Studio",
+      "day": "Mon",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Modeling Long Pose VII–VIII / Final Exam",
+      "program": "Core Sculpture Year 3",
+      "instructor": "Chad Fisher",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Mon",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Life Size Figure Capstone I–III",
+      "program": "Core Sculpture Year 4",
+      "instructor": "Chad Fisher",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Mon",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Philosophy IV–VI",
+      "program": "Core Sculpture Year 4",
+      "instructor": "Steve Perkins / Heather Personett",
+      "notes": "Instructor varies by trimester.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Tue",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Modeling Long Pose VII–VIII / Final Exam",
+      "program": "Core Sculpture Year 3",
+      "instructor": "Uninstructed",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Tue",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Life Size Figure Capstone I–III",
+      "program": "Core Sculpture Year 4",
+      "instructor": "Uninstructed",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Tue",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Écorché I–III",
+      "program": "Core Painting Year 2 + Sculpture Year 2",
+      "instructor": "Edmond Rochat / Marina Melluzzo",
+      "notes": "Shared program block; Marina listed as assistant/shadowing.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Wed",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Modeling Long Pose VII–VIII / Final Exam",
+      "program": "Core Sculpture Year 3",
+      "instructor": "Heather Personett",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Wed",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Life Size Figure Capstone I–III",
+      "program": "Core Sculpture Year 4",
+      "instructor": "Chad Fisher",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Wed",
+      "start": "17:00",
+      "end": "20:00",
+      "title": "Portrait Sculpture",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "09/30/2026",
+      "endDate": "12/09/2026",
+      "instructor": "Marina Melluzzo",
+      "notes": ""
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Thu",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Modeling Long Pose VII–VIII / Final Exam",
+      "program": "Core Sculpture Year 3",
+      "instructor": "Uninstructed",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Thu",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Life Size Figure Capstone I–III",
+      "program": "Core Sculpture Year 4",
+      "instructor": "Uninstructed",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Fri",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Figure Modeling Long Pose VII–VIII / Final Exam",
+      "program": "Core Sculpture Year 3",
+      "instructor": "Marina Melluzzo",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Fri",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Life Size Figure Capstone I–III",
+      "program": "Core Sculpture Year 4",
+      "instructor": "Chad Fisher",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Sat",
+      "start": "06:00",
+      "end": "08:00",
+      "timeLabel": "6:00–8:00 AM",
+      "title": "Early Bird Figure Modeling",
+      "program": "Open Studio",
+      "instructor": "Monitor / Open Studio",
+      "notes": "Open to Core and invited CE.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Sat",
+      "start": "09:00",
+      "end": "12:00",
+      "title": "Figure Sculpture",
+      "program": "Continuing Education – Fall 2026",
+      "startDate": "10/03/2026",
+      "endDate": "12/12/2026",
+      "instructor": "Stephen Perkins",
+      "notes": ""
+    },
+    {
+      "room": "Chandler Studio",
+      "day": "Sat",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Open Studio Portrait Sculpture",
+      "program": "Open Studio – Core",
+      "instructor": "Monitor needed",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    }
+  ],
+  "Casting Studio": [
+    {
+      "room": "Casting Studio",
+      "day": "Tue",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Mold Making IV–VI",
+      "program": "Core Sculpture Year 3",
+      "instructor": "Heather Personett",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Casting Studio",
+      "day": "Wed",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Foundry IV–VI",
+      "program": "Core Sculpture Year 4",
+      "instructor": "Zach Kainz",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Casting Studio",
+      "day": "Wed",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Mold Making I–III",
+      "program": "Core Sculpture Year 2",
+      "instructor": "Elizabeth Conway",
+      "notes": "Chad Fisher listed for grading.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Casting Studio",
+      "day": "Wed",
+      "start": "17:00",
+      "end": "",
+      "timeLabel": "5:00 PM start",
+      "title": "Mold Making I–III – continuation",
+      "program": "Core Sculpture Year 2",
+      "instructor": "Joseph Van Buren",
+      "notes": "Continuation of Wednesday afternoon block.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Casting Studio",
+      "day": "Thu",
+      "start": "09:00",
+      "end": "12:00",
+      "timeLabel": "9:00 AM–12:00 PM",
+      "title": "Foundry IV–VI",
+      "program": "Core Sculpture Year 4",
+      "instructor": "Zach Kainz",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Casting Studio",
+      "day": "Thu",
+      "start": "13:00",
+      "end": "16:00",
+      "timeLabel": "1:00–4:00 PM",
+      "title": "Introduction to Foundry I–III",
+      "program": "Core Sculpture Year 3",
+      "instructor": "Zach Kainz",
+      "notes": "",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    },
+    {
+      "room": "Casting Studio",
+      "day": "Thu",
+      "start": "17:00",
+      "end": "20:00",
+      "timeLabel": "5:00–8:00 PM",
+      "title": "Foundry I–VI – shared/cross-listed block",
+      "program": "Core Sculpture Years 3–4",
+      "instructor": "Zach Kainz",
+      "notes": "Year 3 Foundry continuation + Year 4 Foundry/Stone block.",
+      "startDate": "09/28/2026",
+      "endDate": "06/18/2027",
+      "dateLabel": "2026–27 weekly"
+    }
+  ]
+};
+
+const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+function toMinutes(t){
+  if(!t) return null;
+  const [H,M] = String(t).split(":").map(Number);
+  return H*60+M;
+}
+function fromMinutes(m){
+  const h=String(Math.floor(m/60)).padStart(2,"0");
+  const mm=String(m%60).padStart(2,"0");
+  return `${h}:${mm}`;
+}
+function humanRange([s,e]){ return `${fromMinutes(s)}–${fromMinutes(e)}`; }
+
+function parseDate(s){
+  if(!s) return null;
+  const [m,d,y] = String(s).split("/").map(Number);
+  return new Date(y, m-1, d);
+}
+function formatDate(s){
+  const d=parseDate(s);
+  if(!d) return "";
+  return d.toLocaleDateString(undefined, {month:"short", day:"numeric", year:"numeric"});
+}
+function dateRange(e){
+  if(e.dateLabel) return e.dateLabel;
+  if(!e.startDate && !e.endDate) return "";
+  if(e.startDate === e.endDate) return formatDate(e.startDate);
+  return `${formatDate(e.startDate)}–${formatDate(e.endDate)}`;
+}
+function eventTimeLabel(e){
+  if(e.timeLabel) return e.timeLabel;
+  if(e.start && e.end) return `${e.start}–${e.end}`;
+  if(e.start) return `${e.start} start`;
+  return "";
+}
+function dayForDate(date){ return DAYS[(date.getDay()+6)%7]; }
+function dateOnly(date){ return new Date(date.getFullYear(),date.getMonth(),date.getDate()); }
+function inDateRange(date,startDate,endDate){
+  const d=dateOnly(date), s=parseDate(startDate), e=parseDate(endDate);
+  if(s && d<s) return false;
+  if(e && d>e) return false;
+  return true;
+}
+function isActiveOnDate(e,date){
+  return e.day === dayForDate(date) && inDateRange(date,e.startDate,e.endDate);
+}
+function sortEvents(a,b){
+  const dayDiff=DAYS.indexOf(a.day)-DAYS.indexOf(b.day);
+  if(dayDiff) return dayDiff;
+  const startDiff=(toMinutes(a.start) ?? 9999)-(toMinutes(b.start) ?? 9999);
+  if(startDiff) return startDiff;
+  return String(a.program||"").localeCompare(String(b.program||""));
+}
+function escapeHtml(s){
+  return String(s ?? "").replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+}
+
+function computeAvailability(dayEvents, open=OPEN_TIME, close=CLOSE_TIME){
+  const start=toMinutes(open), end=toMinutes(close);
+  const busy=[];
+  let hasOpenEnded=false;
+
+  for(const e of dayEvents.slice().sort((a,b)=>(toMinutes(a.start)??9999)-(toMinutes(b.start)??9999))){
+    const s0=toMinutes(e.start);
+    if(s0==null) continue;
+    const e0=toMinutes(e.end);
+    if(e0==null) hasOpenEnded=true;
+    const s=Math.max(s0,start);
+    const ee=Math.min(e0==null ? end : e0,end);
+    if(ee<=s) continue;
+    if(!busy.length || s>busy[busy.length-1][1]) busy.push([s,ee]);
+    else busy[busy.length-1][1]=Math.max(busy[busy.length-1][1],ee);
+  }
+
+  const free=[];
+  let cursor=start;
+  for(const [s,e] of busy){
+    if(s>cursor) free.push([cursor,s]);
+    cursor=Math.max(cursor,e);
+  }
+  if(cursor<end) free.push([cursor,end]);
+  return {busy,free,hasOpenEnded};
+}
+
+function openRoom(room){
+  const {backdrop,titleEl,openBadge,todaySummary,tableBody,dlBtn} = window.__mapEls;
+  const data=(schedules[room]||[]).slice().sort(sortEvents);
+
+  titleEl.textContent=`${room} – 2026–27 Schedule`;
+  tableBody.innerHTML="";
+
+  if(!data.length){
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td colspan="6">No bookings are listed for this space.</td>`;
+    tableBody.appendChild(tr);
+  } else {
+    for(const e of data){
+      const tr=document.createElement("tr");
+      const note=e.notes ? `<div class="note">${escapeHtml(e.notes)}</div>` : "";
+      tr.innerHTML =
+        `<td>${escapeHtml(dateRange(e))}</td>`+
+        `<td>${escapeHtml(e.day)}</td>`+
+        `<td><span class="swatch busy"></span>${escapeHtml(eventTimeLabel(e))}</td>`+
+        `<td>${escapeHtml(e.program)}</td>`+
+        `<td>${escapeHtml(e.title)}${note}</td>`+
+        `<td>${escapeHtml(e.instructor||"")}</td>`;
+      tableBody.appendChild(tr);
+    }
+  }
+
+  const now=new Date();
+  const activeToday=data.filter(e=>isActiveOnDate(e,now));
+  const today=dayForDate(now);
+  const todayDate=now.toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"});
+  const withinMaster=inDateRange(now,MASTER_START,MASTER_END);
+
+  if(activeToday.length){
+    const {busy,free,hasOpenEnded}=computeAvailability(activeToday);
+    const nowMin=now.getHours()*60+now.getMinutes();
+    const isBusy=busy.some(([s,e])=>nowMin>=s && nowMin<e);
+    const bookingText=activeToday.map(e=>`${escapeHtml(eventTimeLabel(e))} ${escapeHtml(e.title)}`).join("; ");
+
+    todaySummary.innerHTML =
+      `<strong>${today}, ${todayDate}:</strong> ${isBusy ? "Scheduled use right now." : "No listed booking at this moment."}<br>`+
+      `<span class="small">Today's bookings: ${bookingText}`+
+      `${free.length ? `. Free blocks: ${free.map(humanRange).join(", ")}.` : ""}`+
+      `${hasOpenEnded ? " One or more evening blocks list a start time only, so later availability may be uncertain." : ""}`+
+      ` Recurring weekly blocks may be superseded by closures, breaks, intensives, or special events.</span>`;
+
+    openBadge.textContent=isBusy ? "BUSY" : "OPEN";
+    openBadge.style.background=isBusy ? "#fff7ed" : "#ecfdf5";
+    openBadge.style.color=isBusy ? "#9a3412" : "#065f46";
+  } else if(!withinMaster){
+    const start=parseDate(MASTER_START), end=parseDate(MASTER_END);
+    const before=dateOnly(now)<start;
+    todaySummary.innerHTML =
+      `<strong>${today}, ${todayDate}:</strong> No 2026–27 weekly schedule is active today.<br>`+
+      `<span class="small">${before ? `The master schedule begins ${formatDate(MASTER_START)}.` : `The master schedule runs through ${formatDate(MASTER_END)}.`}</span>`;
+    openBadge.textContent="OUT OF TERM";
+    openBadge.style.background="#f1f5f9";
+    openBadge.style.color="#475569";
+  } else {
+    const {free}=computeAvailability([]);
+    todaySummary.innerHTML =
+      `<strong>${today}, ${todayDate}:</strong> No booking is listed for this studio today.<br>`+
+      `<span class="small">Open-hours window used by this tool: ${OPEN_TIME}–${CLOSE_TIME}. Free blocks: ${free.map(humanRange).join(", ")}. Recurring weekly blocks may be superseded by closures, breaks, intensives, or special events.</span>`;
+    openBadge.textContent="OPEN";
+    openBadge.style.background="#ecfdf5";
+    openBadge.style.color="#065f46";
+  }
+
+  dlBtn.onclick=()=>downloadICS(room,data);
+  backdrop.classList.add("show");
+  backdrop.setAttribute("aria-hidden","false");
+}
+
+function csvToRows(csv){
+  const rows=[]; let row=[], val="", inQuotes=false;
+  for(let i=0;i<csv.length;i++){
+    const c=csv[i], n=csv[i+1];
+    if(c==='"' && inQuotes && n==='"'){ val+='"'; i++; }
+    else if(c==='"') inQuotes=!inQuotes;
+    else if(c===',' && !inQuotes){ row.push(val); val=""; }
+    else if((c==='\n' || c==='\r') && !inQuotes){
+      if(c==='\r' && n==='\n') i++;
+      row.push(val); val="";
+      if(row.some(x=>x.trim()!=="")) rows.push(row);
+      row=[];
+    } else val+=c;
+  }
+  row.push(val);
+  if(row.some(x=>x.trim()!=="")) rows.push(row);
+  return rows;
+}
+
+async function loadScheduleCSV(){
+  try {
+    const response=await fetch(DATA_CSV_URL,{cache:"no-store"});
+    if(!response.ok) throw new Error("CSV unavailable");
+    const rows=csvToRows(await response.text());
+    const headers=rows.shift().map(h=>h.replace(/^\uFEFF/,"").trim());
+    const next={};
+
+    for(const r of rows){
+      const rec=Object.fromEntries(headers.map((h,i)=>[h,(r[i]||"").trim()]));
+      const room=rec.Room;
+      if(!room) continue;
+      next[room] ||= [];
+      next[room].push({
+        program:rec.Program,
+        title:rec.Title,
+        day:rec.Day,
+        start:rec["Start Time"],
+        end:rec["End Time"],
+        timeLabel:rec["Time Label"],
+        startDate:rec["Start Date"],
+        endDate:rec["End Date"],
+        dateLabel:rec["Date Label"],
+        instructor:rec.Instructor,
+        notes:rec.Notes
+      });
+    }
+    for(const room in next) next[room].sort(sortEvents);
+    schedules=next;
+  } catch(err) {
+    console.info("Using embedded 2026–27 schedule data because the CSV was not loaded.",err);
+  }
+}
+
+function ymdLocal(d){
+  return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`;
+}
+function dateForDayInRange(startDate,endDate,day){
+  const start=parseDate(startDate), end=parseDate(endDate);
+  if(!start||!end) return [];
+  const target=DAYS.indexOf(day), dates=[], cur=new Date(start);
+  while(cur<=end){
+    if(dayForDate(cur)===day) dates.push(new Date(cur));
+    cur.setDate(cur.getDate()+1);
+  }
+  return dates;
+}
+function icsEscape(s){
+  return String(s??"").replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");
+}
+function downloadICS(room,data){
+  const TZ="America/New_York";
+  let ics="BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Lyme Academy//2026-27 Interactive Map//EN\r\nX-WR-TIMEZONE:"+TZ+"\r\n";
+
+  for(const e of data){
+    for(const d of dateForDayInRange(e.startDate,e.endDate,e.day)){
+      const uid=`${room}-${e.title}-${e.day}-${e.startDate}-${ymdLocal(d)}@lyme`.replace(/[^a-zA-Z0-9@.-]/g,"");
+      ics+="BEGIN:VEVENT\r\n";
+      ics+=`UID:${uid}\r\n`;
+      ics+=`DTSTAMP:${new Date().toISOString().replace(/[-:]/g,"").split(".")[0]}Z\r\n`;
+      ics+=`DTSTART;TZID=${TZ}:${ymdLocal(d)}T${e.start.replace(":","")}00\r\n`;
+      if(e.end) ics+=`DTEND;TZID=${TZ}:${ymdLocal(d)}T${e.end.replace(":","")}00\r\n`;
+      ics+=`SUMMARY:${icsEscape(room+" – "+e.title)}\r\n`;
+      ics+=`DESCRIPTION:${icsEscape([e.program,e.instructor,e.notes].filter(Boolean).join(" | "))}\r\n`;
+      ics+="END:VEVENT\r\n";
+    }
+  }
+
+  ics+="END:VCALENDAR\r\n";
+  const blob=new Blob([ics],{type:"text/calendar"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=`${room.replace(/\s+/g,"_")}_2026_27.ics`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),3000);
+}
+
+document.addEventListener("DOMContentLoaded",async()=>{
+  await loadScheduleCSV();
+
+  const backdrop=document.getElementById("modalBackdrop");
+  const titleEl=document.getElementById("modalTitle");
+  const openBadge=document.getElementById("openBadge");
+  const todaySummary=document.getElementById("todaySummary");
+  const tableBody=document.querySelector("#scheduleTable tbody");
+  const closeBtn=document.getElementById("closeBtn");
+  const dlBtn=document.getElementById("downloadICS");
+
+  window.__mapEls={backdrop,titleEl,openBadge,todaySummary,tableBody,closeBtn,dlBtn};
+
+  document.querySelectorAll(".hotspot").forEach(hs=>{
+    hs.addEventListener("click",()=>openRoom(hs.dataset.room));
+  });
+
+  function closeModal(){
+    backdrop.classList.remove("show");
+    backdrop.setAttribute("aria-hidden","true");
+  }
+  closeBtn.addEventListener("click",closeModal);
+  backdrop.addEventListener("click",e=>{ if(e.target===backdrop) closeModal(); });
+  document.addEventListener("keydown",e=>{ if(e.key==="Escape" && backdrop.classList.contains("show")) closeModal(); });
+});
+</script>
+</body></html>
